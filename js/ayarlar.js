@@ -5,7 +5,7 @@
 const LGS = (window.LGS = window.LGS || {});
 
 /** Sürüm: index.html'deki ?v= parametresi ile birlikte artırılır (önbellek için). */
-LGS.SURUM = 2;
+LGS.SURUM = 3;
 
 /** Resmî olmayan uyarı metni — tek yerden yönetilir. */
 LGS.OTORITE = "MEB";
@@ -34,9 +34,11 @@ LGS.MAX_PUAN = 500;
 /** Lise türleri. */
 LGS.LISE_TURLERI = [
   { id: "fen", ad: "Fen Lisesi" },
-  { id: "mtal", ad: "MTAL" },
-  { id: "proje", ad: "Proje Okulu" },
+  { id: "anadolu", ad: "Anadolu Lisesi" },
   { id: "sosyal", ad: "Sosyal Bilimler" },
+  { id: "mtal", ad: "MTAL" },
+  { id: "imamhatip", ad: "İmam Hatip" },
+  { id: "proje", ad: "Proje Okulu" },
   { id: "diger", ad: "Diğer" },
 ];
 

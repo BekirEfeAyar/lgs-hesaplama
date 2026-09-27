@@ -222,22 +222,48 @@
 
   /* ---------------------------------------------------------------- lise listesi */
 
-  function liseleriGetir() {
-    const kayitli = oku(A.liseler, null);
-    if (Array.isArray(kayitli)) return kayitli;
-    // İlk açılış: örnek listeyi yükle
-    const tohum = (typeof ORNEK_LISELER !== "undefined" ? ORNEK_LISELER : []).map((l) => ({
+  function tohumUret() {
+    return (typeof TABAN_LISELER !== "undefined" ? TABAN_LISELER : []).map((l) => ({
       id: yeniId("l"),
       ad: l.ad,
       sehir: l.sehir,
       ilce: l.ilce,
       tur: l.tur,
+      alan: l.alan || "",
       taban: l.taban,
-      dilim: l.dilim,
+      taban2024: l.taban2024 === undefined ? null : l.taban2024,
+      dilim: l.dilim === undefined ? null : l.dilim,
+      kontenjan: l.kontenjan === undefined ? null : l.kontenjan,
+      kod: l.kod || "",
       resmi: false,
+      kaynak: l.kaynak || "",
       not: "",
     }));
+  }
+
+  function liseleriGetir() {
+    const kayitli = oku(A.liseler, null);
+    if (Array.isArray(kayitli)) {
+      // Liste sürümü eskiyse (örnek 109 kayıt) yeni taban listesine geçir,
+      // kullanıcının kendi resmî kayıtlarını koru.
+      const surum = oku(A.liseler + ".surum", 1);
+      if (surum < 2) {
+        const kullanici = kayitli.filter((l) => l.resmi);
+        const tohum = tohumUret();
+        kullanici.forEach((k) => {
+          if (!k.id) k.id = yeniId("l");
+          tohum.push(k);
+        });
+        yaz(A.liseler, tohum);
+        yaz(A.liseler + ".surum", 2);
+        return tohum;
+      }
+      return kayitli;
+    }
+    // İlk açılış: taban puan listesini yükle
+    const tohum = tohumUret();
     yaz(A.liseler, tohum);
+    yaz(A.liseler + ".surum", 2);
     return tohum;
   }
 
@@ -301,7 +327,7 @@
   }
 
   function herSeyiSifirla() {
-    [A.denemeler, A.liseler, A.ayarlar].forEach((k) => localStorage.removeItem(k));
+    [A.denemeler, A.liseler, A.liseler + ".surum", A.ayarlar].forEach((k) => localStorage.removeItem(k));
     return tx("readwrite", (depo) => depo.clear());
   }
 

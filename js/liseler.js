@@ -23,6 +23,10 @@
     sadeceYerlesir: false,
   };
 
+  /** Listede kaç kayıt gösteriliyor (sayfalama). */
+  let gosterilen = 100;
+  const SAYFA_BOYUTU = 100;
+
   function ciz(kap) {
     const ayarlar = D.ayarlarGetir();
     if (!durum.puan) durum.puan = ayarlar.hedefPuan || 350;
@@ -31,8 +35,8 @@
       el(
         "div",
         { class: "uyari-kutu" },
-        el("strong", { text: "Taban puanlar örnektir. " }),
-        "Bu listedeki puan ve yüzdelik dilimler yaklaşık örnek değerlerdir, resmî TAB verisi değildir. Kendi lise kaydını ekleyip güncellersen o satır resmî olarak işaretlenir."
+        el("strong", { text: "2025 taban puanları. " }),
+        "Bu liste 2025 ilk yerleştirme sonuçlarına dayanır (kaynak: unsalim.com rehberi). 2026 puanları henüz açıklanmadı. Yüzdelik dilim bu kaynakta yok. Tercih yaparken MEB'in güncel duyurularını teyit et."
       )
     );
     kap.appendChild(filtreler());
@@ -67,7 +71,6 @@
       sayi.value = durum.puan;
       goster();
     });
-
     satir.appendChild(el("div", { class: "puan-girdi" }, sayi, el("span", { class: "puan-birim", text: "/ " + LGS.MAX_PUAN })));
     satir.appendChild(el("div", { class: "puan-araligi" }, kaydirici));
     kart.appendChild(satir);
@@ -157,6 +160,7 @@
     const arama = el("input", { type: "search", value: durum.arama, placeholder: "Lise adı ara…", class: "arama" });
     arama.addEventListener("input", () => {
       durum.arama = arama.value;
+      gosterilen = SAYFA_BOYUTU;
       goster();
     });
     izgara.appendChild(el("label", { class: "alan" }, el("span", { class: "alan-etiket", text: "Ara" }), arama));
@@ -176,6 +180,7 @@
     ].forEach((s) => siralama.appendChild(el("option", { value: s.v, text: s.ad, selected: durum.siralama === s.v })));
     siralama.addEventListener("change", () => {
       durum.siralama = siralama.value;
+      gosterilen = SAYFA_BOYUTU;
       goster();
     });
     satirlar.appendChild(el("label", { class: "alan dar" }, el("span", { class: "alan-etiket", text: "Sıralama" }), siralama));
@@ -241,7 +246,9 @@
     kap.appendChild(sonuclar());
   }
 
+  /** Filtre değiştiğinde liste başa döner. */
   function yenidenCiz() {
+    gosterilen = SAYFA_BOYUTU;
     LGS.uygulama.ciz();
   }
 
@@ -261,7 +268,7 @@
       return true;
     });
 
-    const yerlesir = liste.filter((l) => durum.puan >= l.taban);
+    const yerlesir = liste.filter((l) => l.taban !== null && l.taban !== undefined && durum.puan >= l.taban);
     if (durum.sadeceYerlesir) liste = yerlesir;
     liste.sort(sirala);
 
@@ -301,8 +308,34 @@
         el("span", { text: "Durum" })
       )
     );
-    liste.forEach((l) => tablo.appendChild(liseSatiri(l)));
+    // Sayfalama: ilk 100 kayıt, gerisi butonla
+    const gosterilecek = liste.slice(0, gosterilen);
+    gosterilecek.forEach((l) => tablo.appendChild(liseSatiri(l)));
     kap.appendChild(tablo);
+
+    if (liste.length > gosterilen) {
+      const kalan = liste.length - gosterilen;
+      kap.appendChild(
+        el(
+          "button",
+          {
+            class: "btn hayalet genis",
+            id: "daha-fazla",
+            style: { marginTop: "10px" },
+            onClick: () => {
+              gosterilen += SAYFA_BOYUTU;
+              goster();
+              // Butonun yerine kaydırma yapma, kullanıcı kaldığı yerden devam eder
+            },
+          },
+          "Daha fazla göster (" + kalan + " kayıt kaldı)"
+        )
+      );
+    } else if (liste.length > SAYFA_BOYUTU) {
+      kap.appendChild(
+        el("p", { class: "ipucu ortalı", style: { marginTop: "10px" }, text: "Tüm " + liste.length + " kayıt gösteriliyor." })
+      );
+    }
     return kap;
   }
 
@@ -316,13 +349,10 @@
       return kutu;
     }
 
-    kutu.appendChild(el("h3", { text: "Bu il için henüz lise verisi yok" }));
+    kutu.appendChild(el("h3", { text: "Bu filtrede lise bulunamadı" }));
     kutu.appendChild(
       el("p", {
-        text:
-          "Türkiye'nin 81 ili ve " +
-          IL_ILCE_TUMU.reduce((t, x) => t + x.ilceler.length, 0) +
-          " ilçesi listede, ama lise taban puanı verisi yalnızca bazı iller için eklenmiş durumda.",
+        text: "Filtreleri gevşetmeyi ya da Veriler sekmesinden yeni lise eklemeyi dene.",
       })
     );
     kutu.appendChild(
@@ -341,32 +371,61 @@
 
   function enYakin(liseler, puan) {
     if (!liseler.length) return "—";
-    const uygun = liseler.filter((l) => l.taban > puan).sort((a, b) => a.taban - b.taban)[0];
+    const uygun = liseler
+      .filter((l) => l.taban !== null && l.taban !== undefined && l.taban > puan)
+      .sort((a, b) => a.taban - b.taban)[0];
     if (!uygun) return "Hepsi yeter";
     return "+" + (uygun.taban - puan).toFixed(1).replace(".", ",") + " puan";
   }
 
+  function tabanDeger(l) {
+    // Tabanı olmayanın sıralama değeri -1: her yönde en sonda
+    if (l.taban === null || l.taban === undefined) return -1;
+    return l.taban;
+  }
+
   function sirala(a, b) {
     switch (durum.siralama) {
-      case "taban-asc":
-        return a.taban - b.taban;
+      case "taban-asc": {
+        const ta = tabanDeger(a);
+        const tb = tabanDeger(b);
+        if (ta === -1 && tb === -1) return 0;
+        if (ta === -1) return 1;
+        if (tb === -1) return -1;
+        return ta - tb;
+      }
       case "sehir":
-        return a.sehir.localeCompare(b.sehir, "tr") || a.ilce.localeCompare(b.ilce, "tr") || b.taban - a.taban;
+        return a.sehir.localeCompare(b.sehir, "tr") || a.ilce.localeCompare(b.ilce, "tr") || tabanDeger(b) - tabanDeger(a);
       case "ilce":
-        return a.ilce.localeCompare(b.ilce, "tr") || b.taban - a.taban;
+        return a.ilce.localeCompare(b.ilce, "tr") || tabanDeger(b) - tabanDeger(a);
       case "ad":
         return a.ad.localeCompare(b.ad, "tr");
-      default:
-        return b.taban - a.taban;
+      default: {
+        const ta = tabanDeger(a);
+        const tb = tabanDeger(b);
+        if (ta === -1 && tb === -1) return 0;
+        if (ta === -1) return 1;
+        if (tb === -1) return -1;
+        return tb - ta;
+      }
     }
   }
 
+  /** Kaynak etiketi: resmî (kullanıcı) / 2025 listesi / örnek. */
+  function kaynakEtiket(l) {
+    if (l.resmi) return null;
+    if (l.kaynak === "unsalim2025")
+      return el("em", { class: "kaynak", text: "2025", title: "2025 taban puanı (unsalim.com rehberi, MEB verilerine dayanır)" });
+    return el("em", { class: "tahmini", text: "örnek veri", title: "Resmî olmayan örnek değer" });
+  }
+
   function liseSatiri(l) {
-    const yeter = durum.puan >= l.taban;
-    const fark = l.taban - durum.puan;
+    const tabanYok = l.taban === null || l.taban === undefined;
+    const yeter = !tabanYok && durum.puan >= l.taban;
+    const fark = tabanYok ? 0 : l.taban - durum.puan;
     return el(
       "div",
-      { class: "lise-satir " + (yeter ? "yeter" : "yetersiz") },
+      { class: "lise-satir " + (tabanYok ? "bilinmiyor" : yeter ? "yeter" : "yetersiz") },
       el(
         "div",
         { class: "lise-ad" },
@@ -376,17 +435,21 @@
           { class: "lise-etiketler" },
           el("em", { class: "tur", text: turAd(l.tur) }),
           el("em", { class: "sehir", text: l.sehir }),
-          l.resmi ? null : el("em", { class: "tahmini", text: "örnek veri", title: "Resmî olmayan örnek değer" })
+          l.alan ? el("em", { class: "alan", text: l.alan, title: "Alan / dal" }) : null,
+          kaynakEtiket(l)
         )
       ),
       el("div", { class: "lise-ilce", text: l.ilce }),
       el(
         "div",
         { class: "lise-taban" },
-        el("strong", { text: puanBicim(l.taban) }),
-        l.dilim ? el("span", { text: "%" + String(l.dilim).replace(".", ",") }) : null
+        tabanYok ? el("strong", { class: "yok", text: "—" }) : el("strong", { text: puanBicim(l.taban) }),
+        !tabanYok && l.dilim ? el("span", { text: "%" + String(l.dilim).replace(".", ",") }) : null,
+        !tabanYok && l.taban2024 ? el("span", { class: "gecmis", text: "2024: " + puanBicim(l.taban2024), title: "2024 taban puanı" }) : null
       ),
-      el("div", { class: "lise-durum " + (yeter ? "tamam" : "eksik") }, yeter ? "Yeterli ✓" : fark.toFixed(1).replace(".", ",") + " puan gerek")
+      tabanYok
+        ? el("div", { class: "lise-durum notr", text: "puan yok", title: "Bu programın 2025 taban puanı oluşmadı" })
+        : el("div", { class: "lise-durum " + (yeter ? "tamam" : "eksik") }, yeter ? "Yeterli ✓" : fark.toFixed(1).replace(".", ",") + " puan gerek")
     );
   }
 

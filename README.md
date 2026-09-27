@@ -29,20 +29,23 @@ Kurulum, sunucu, hesap yönetimi, üyelik — hiçbir şey gerekmiyor. Siteyi a�
 - Fotoğraflar **sadece senin cihazında** durur, internete yüklenmez
 
 ### Lise Rehberi
+- **3096 program, 81 il** — 2025 ilk yerleştirme taban puanları
 - Puanını gir → o puanla **yerleşebileceğin** liseleri gör
-- **81 il** ve **973 ilçe** (tamamı) — bölge, il ve ilçeye göre filtrele
-- Tür filtresi (Fen / MTAL / Proje / Sosyal)
-- Ada göre arama
-- 5 farklı sıralama
+- **Bölge → İl → İlçe** zincirleme filtre (973 ilçe tamamı)
+- Tür filtresi (Fen / Anadolu / Sosyal / MTAL / İmam Hatip / Proje)
+- Alan / dal bilgisi (örn. Fen Bilimleri, Elektrik-Elektronik Tek.)
+- Her satırda 2024 taban puanı da yazar (değişimi gör)
+- Tabanı oluşmamış programlar "puan yok" diye işaretlenir
+- Ada göre arama, 5 farklı sıralama, sayfalama (100'lük sayfalar)
 - "Sadece puanıma yetenler" anahtarı
 - Her satırda ne kadar puan gerektiği yazıyor
-- Veri girişi olmayan iller "veri yok" diye işaretlenir, boş ekran açıklar
 
 ### Veri yönetimi
 - Kendi lise kayıtlarını ekle / düzenle / sil (il ve ilçe seçimi açılır listeden)
 - **Toplu içe aktarma:** Excel'den kopyalayıp yapıştır
-- CSV dışa aktarma
+- CSV dışa aktarma (alan, 2024 puan, kontenjan, kod, kaynak sütunlarıyla)
 - JSON yedek alma ve geri yükleme
+- Eski sürümden geçişte kendi resmî kayıtların korunur
 
 ---
 
@@ -89,15 +92,17 @@ Resmî LGS puanı, sınav ortalama ve standart sapma verileri kullanılarak MEB 
 hesaplanır. Bu sitedeki değer doğru/yanlış oranından çıkan **doğrusal bir tahmindir**.
 Gerçek puanın bir miktar altında ya da üstünde olabilir.
 
-**2. Lise taban puanları örnek veridir.**
-Depodaki 109 lise, sitenin boş görünmemesi için **yaklaşık örnek değerlerle** hazırlandı ve
-sadece 22 ili kapsıyor. **Resmî TAB (taban puan) verisi değildir.** Gerçek taban puanlar
-MEB tarafından her yıl e-Okul üzerinden açıklanır; orası giriş gerektirdiği için otomatik
-alınamaz. Kalan 59 il için liste boştur.
+**2. Lise puanları 2025 verisidir, 2026 henüz açıklanmadı.**
+Listedeki 3096 program, unsalim.com'un "2025 LGS Taban Puanları, Puan Farkları ve
+Yerleşme Bilgileri" rehberinden alındı (MEB / e-Okul verilerine dayanır). Her satırda
+kaynak etiketi ("2025") var. 2026 taban puanları yerleştirme sonuçlarıyla belli olur.
 
-İl ve ilçe listesi ise **tam ve gerçektir** (81 il / 973 ilçe).
+Yüzdelik dilim bu kaynakta YOK — o yüzden sitede dilim sütunu boş. Kendi verini
+eklersen dilimi girebilirsin.
 
-Bu iki uyarı sitede her ekranda görünür. Doğru karar için mutlaka resmî kaynaklardan teyit et.
+İl ve ilçe listesi ise **tam ve gerçektir** (81 il / 973 ilçe, turkiyeapi.dev).
+
+Bu uyarılar sitede her ekranda görünür. Doğru karar için mutlaka resmî kaynaklardan teyit et.
 
 ### Kendi lise listeni eklemek
 
@@ -157,7 +162,7 @@ lgs-hesaplama/
 │   └── uygulama.js         Tema, sekmeler, başlatma
 ├── veri/
 │   ├── il-ilce.js          81 il + 973 ilçe (turkiyeapi.dev)
-│   └── liseler.js          Örnek lise listesi (109 kayıt, 22 il)
+│   └── liseler.js          3096 program: 2025+2024 taban puanları (unsalim.com rehberi)
 ├── test/
 │   └── puan.test.js        Puan motoru testleri (node test/puan.test.js)
 └── README.md
@@ -181,7 +186,7 @@ Tarayıcı testleri (gerçek tıklama, 51 test) depo dışında CDP sürücüsü
 | style.css | 23,0 |
 | js/*.js | 8 dosya, ~68 |
 | veri/il-ilce.js | 23,5 |
-| veri/liseler.js | 13,4 |
+| veri/liseler.js | ~750 |
 | test/puan.test.js | 7,8 |
 
 ## Tarayıcı desteği

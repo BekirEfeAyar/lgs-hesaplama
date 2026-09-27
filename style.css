@@ -969,6 +969,22 @@ textarea {
   border-color: transparent;
 }
 
+.lise-etiketler em.kaynak {
+  background: color-mix(in srgb, var(--iyi) 13%, transparent);
+  color: var(--iyi);
+  border-color: transparent;
+  font-weight: 700;
+}
+
+.lise-etiketler em.alan {
+  background: transparent;
+  border-style: dashed;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .lise-ilce {
   color: var(--metin-soluk);
   font-size: 13px;
@@ -985,9 +1001,19 @@ textarea {
   font-weight: 700;
 }
 
+.lise-taban strong.yok {
+  color: var(--metin-soluk);
+  font-weight: 400;
+}
+
 .lise-taban span {
   font-size: 11.5px;
   color: var(--metin-soluk);
+}
+
+.lise-taban span.gecmis {
+  display: block;
+  opacity: 0.85;
 }
 
 .lise-durum {
@@ -1007,6 +1033,17 @@ textarea {
 .lise-durum.eksik {
   background: color-mix(in srgb, var(--hata) 12%, transparent);
   color: var(--hata);
+}
+
+.lise-durum.notr {
+  background: var(--yuzey-2);
+  border: 1px solid var(--kenar);
+  color: var(--metin-soluk);
+  font-weight: 600;
+}
+
+.lise-satir.bilinmiyor {
+  opacity: 0.75;
 }
 
 /* ---------------------------------------------------------------- yönetim listesi */
