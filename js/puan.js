@@ -3,7 +3,7 @@
    --------------------------------------------------------------------------
    Net  = Doğru − (Yanlış ÷ 3)
    Boş  = Soru − Doğru − Yanlış
-   Puan = (Toplam Net ÷ 160) × 500
+   Puan = (Toplam Net ÷ 90) × 500
 
    Uyarı: Bu, resmî MEB puanı DEĞİLDİR. MEB puanı sınav ortalama ve standart
    sapma verileriyle dönüştürülerek hesaplanır. Buradaki değer deneme

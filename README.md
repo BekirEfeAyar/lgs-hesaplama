@@ -54,34 +54,34 @@ Kurulum, sunucu, hesap yönetimi, üyelik — hiçbir şey gerekmiyor. Siteyi a�
 ```
 Net  = Doğru − (Yanlış ÷ 3)
 Boş  = Soru − Doğru − Yanlış
-Puan = (Toplam Net ÷ 160) × 500
+Puan = (Toplam Net ÷ 90) × 500
 ```
 
-### Güncel LGS soru dağılımı (160 soru)
+### Güncel LGS soru dağılımı (90 soru, MEB Kılavuzu)
 
 | Oturum | Ders | Soru |
 |---|---|---:|
-| 1. Oturum | Türkçe | 40 |
+| 1. Oturum (Sözel, 75 dk) | Türkçe | 20 |
 | 1. Oturum | T.C. İnkılap Tarihi ve Atatürkçülük | 10 |
 | 1. Oturum | Din Kültürü ve Ahlak Bilgisi | 10 |
-| 2. Oturum | Matematik | 40 |
-| 2. Oturum | Fen Bilimleri | 30 |
-| 2. Oturum | Sosyal Bilgiler | 30 |
-| | **Toplam** | **160** |
+| 1. Oturum | Yabancı Dil | 10 |
+| 2. Oturum (Sayısal, 80 dk) | Matematik | 20 |
+| 2. Oturum | Fen Bilimleri | 20 |
+| | **Toplam** | **90** |
 
 ### Örnek
 
 | Ders | Doğru | Yanlış | Boş | Net |
 |---|---:|---:|---:|---:|
-| Türkçe | 30 | 8 | 2 | 27,33 |
+| Türkçe | 16 | 3 | 1 | 15,00 |
 | İnkılap | 8 | 2 | 0 | 7,33 |
 | Din | 9 | 1 | 0 | 8,67 |
-| Matematik | 25 | 12 | 3 | 21,00 |
-| Fen | 20 | 8 | 2 | 17,33 |
-| Sosyal | 24 | 5 | 1 | 22,33 |
-| **Toplam** | **116** | **36** | **8** | **104,00** |
+| Yabancı Dil | 8 | 1 | 1 | 7,67 |
+| Matematik | 12 | 6 | 2 | 10,00 |
+| Fen | 15 | 3 | 2 | 14,00 |
+| **Toplam** | **68** | **16** | **6** | **62,67** |
 
-→ Puan = (104 ÷ 160) × 500 = **325,0**
+→ Puan = (62,67 ÷ 90) × 500 = **348,1**
 
 ---
 

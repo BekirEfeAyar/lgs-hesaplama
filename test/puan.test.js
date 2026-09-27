@@ -66,19 +66,19 @@ function dogruDagit(toplam) {
 /* --------------------------------------------------------------- yapı */
 
 baslik("=== SINAV YAPISI ===");
-esit("1. oturum soru sayısı (60)", U.DERSLER.filter((x) => x.oturum === 1).reduce((t, x) => t + x.soru, 0), 60);
-esit("2. oturum soru sayısı (100)", U.DERSLER.filter((x) => x.oturum === 2).reduce((t, x) => t + x.soru, 0), 100);
-esit("Toplam soru", U.TOPLAM_SORU, 160);
+esit("1. oturum soru sayısı (50)", U.DERSLER.filter((x) => x.oturum === 1).reduce((t, x) => t + x.soru, 0), 50);
+esit("2. oturum soru sayısı (40)", U.DERSLER.filter((x) => x.oturum === 2).reduce((t, x) => t + x.soru, 0), 40);
+esit("Toplam soru", U.TOPLAM_SORU, 90);
 esit("Puan üst sınırı", U.MAX_PUAN, 500);
 esit("Yanlış etkisi paydası", U.YANLIS_ETKI, 3);
 esit("Ders sayısı", U.DERSLER.length, 6);
 
 /* --------------------------------------------------------------- puan */
 
-baslik("=== PUAN: 500 × net ÷ 160 ===");
+baslik("=== PUAN: 500 × net ÷ 90 ===");
 [
-  [160, 500], [140, 437.5], [120, 375], [100, 312.5],
-  [80, 250], [60, 187.5], [40, 125], [0, 0],
+  [90, 500], [72, 400], [63, 350], [45, 250],
+  [36, 200], [18, 100], [0, 0],
 ].forEach(([n, b]) => kontrol("net " + String(n).padStart(3), P.hesapla({ dersler: dogruDagit(n) }).puan, b));
 
 /* --------------------------------------------------------------- net */
@@ -86,23 +86,23 @@ baslik("=== PUAN: 500 × net ÷ 160 ===");
 baslik("=== YANLIŞ ETKİSİ: net = Doğru − Yanlış/3 ===");
 {
   const d = dogruDagit(0);
-  d.matematik = { d: 20, y: 9 };
-  kontrol("Matematik D=20 Y=9", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "matematik").net, 17);
+  d.matematik = { d: 11, y: 9 };
+  kontrol("Matematik D=11 Y=9", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "matematik").net, 8);
 }
 {
   const d = dogruDagit(0);
-  d.turkce = { d: 30, y: 3 };
-  kontrol("Türkçe D=30 Y=3", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "turkce").net, 29);
+  d.turkce = { d: 15, y: 3 };
+  kontrol("Türkçe D=15 Y=3", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "turkce").net, 14);
 }
 {
   const d = dogruDagit(0);
-  d.fen = { d: 10, y: 20 };
-  kontrol("Fen D=10 Y=20", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").net, 10 - 20 / 3);
+  d.fen = { d: 10, y: 10 };
+  kontrol("Fen D=10 Y=10", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").net, 10 - 10 / 3);
 }
 {
   const d = dogruDagit(0);
-  d.fen = { d: 5, y: 25 };
-  kontrol("Fen D=5 Y=25 → negatif net 0'a çekilir", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").net, 0);
+  d.fen = { d: 5, y: 15 };
+  kontrol("Fen D=5 Y=15 → negatif net 0'a çekilir", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").net, 0);
 }
 
 /* --------------------------------------------------------------- boş */
@@ -110,13 +110,18 @@ baslik("=== YANLIŞ ETKİSİ: net = Doğru − Yanlış/3 ===");
 baslik("=== BOŞ SAYISI ===");
 {
   const d = dogruDagit(0);
-  d.turkce = { d: 25, y: 5 };
-  kontrol("Türkçe 40 soru, D=25 Y=5 → boş", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "turkce").b, 10);
+  d.turkce = { d: 15, y: 3 };
+  kontrol("Türkçe 20 soru, D=15 Y=3 → boş", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "turkce").b, 2);
 }
 {
   const d = dogruDagit(0);
-  d.fen = { d: 30, y: 0 };
-  kontrol("Fen 30 soru, hepsi doğru → boş", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").b, 0);
+  d.fen = { d: 20, y: 0 };
+  kontrol("Fen 20 soru, hepsi doğru → boş", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "fen").b, 0);
+}
+{
+  const d = dogruDagit(0);
+  d.yabanci = { d: 7, y: 2 };
+  kontrol("Yabancı Dil 10 soru, D=7 Y=2 → boş", P.hesapla({ dersler: d }).dersler.find((x) => x.id === "yabanci").b, 1);
 }
 
 /* --------------------------------------------------------------- koruma */
@@ -124,19 +129,19 @@ baslik("=== BOŞ SAYISI ===");
 baslik("=== GEÇERSİZ GİRİŞ KORUMASI ===");
 {
   const d = dogruDagit(0);
-  d.turkce = { d: 55, y: 10 };
+  d.turkce = { d: 25, y: 10 };
   const h = P.hesapla({ dersler: d });
   const s = h.dersler.find((x) => x.id === "turkce");
-  kontrol("Doğru soru sayısına kırpılır", s.d, 40);
+  kontrol("Doğru soru sayısına kırpılır", s.d, 20);
   kontrol("Yanlış kalan yer kadar kırpılır", s.y, 0);
   kontrol("Uyarı üretilir", h.hatali.length > 0 ? 1 : 0, 1);
-  kontrol("Toplam D+Y+B = 160", h.toplamD + h.toplamY + h.toplamB, 160);
+  kontrol("Toplam D+Y+B = 90", h.toplamD + h.toplamY + h.toplamB, 90);
 }
 {
   const d = dogruDagit(0);
   d.turkce = { d: -5, y: -3 };
   const s = P.hesapla({ dersler: d }).dersler.find((x) => x.id === "turkce");
-  kontrol("Negatif giriş → 0", s.d + s.y + s.b, 40);
+  kontrol("Negatif giriş → 0", s.d + s.y + s.b, 20);
 }
 {
   const d = dogruDagit(0);
@@ -152,7 +157,7 @@ baslik("=== BOŞ DENEME ===");
   const h = P.hesapla({ dersler: {} });
   kontrol("Puan", h.puan, 0);
   kontrol("Net", h.toplamNet, 0);
-  kontrol("D+Y+B = 160", h.toplamD + h.toplamY + h.toplamB, 160);
+  kontrol("D+Y+B = 90", h.toplamD + h.toplamY + h.toplamB, 90);
 }
 {
   const h = P.hesapla(null);
@@ -164,19 +169,19 @@ baslik("=== BOŞ DENEME ===");
 baslik("=== GERÇEKÇİ SENARYO ===");
 {
   const d = dogruDagit(0);
-  d.turkce = { d: 30, y: 8 };
+  d.turkce = { d: 16, y: 3 };
   d.inkilap = { d: 8, y: 2 };
   d.din = { d: 9, y: 1 };
-  d.matematik = { d: 25, y: 12 };
-  d.fen = { d: 20, y: 8 };
-  d.sosyal = { d: 24, y: 5 };
+  d.yabanci = { d: 8, y: 1 };
+  d.matematik = { d: 12, y: 6 };
+  d.fen = { d: 15, y: 3 };
   const h = P.hesapla({ dersler: d });
   console.log("    D " + h.toplamD + " · Y " + h.toplamY + " · B " + h.toplamB);
-  kontrol("Toplam D+Y+B = 160", h.toplamD + h.toplamY + h.toplamB, 160);
-  kontrol("Net", h.toplamNet, (30 - 8 / 3) + (8 - 2 / 3) + (9 - 1 / 3) + (25 - 4) + (20 - 8 / 3) + (24 - 5 / 3));
-  kontrol("Puan = 500 × net ÷ 160", h.puan, (500 * h.toplamNet) / 160);
-  kontrol("1. oturum neti", h.oturumlar[1].net, (30 - 8 / 3) + (8 - 2 / 3) + (9 - 1 / 3));
-  kontrol("2. oturum neti", h.oturumlar[2].net, (25 - 4) + (20 - 8 / 3) + (24 - 5 / 3));
+  kontrol("Toplam D+Y+B = 90", h.toplamD + h.toplamY + h.toplamB, 90);
+  kontrol("Net", h.toplamNet, (16 - 1) + (8 - 2 / 3) + (9 - 1 / 3) + (8 - 1 / 3) + (12 - 2) + (15 - 1));
+  kontrol("Puan = 500 × net ÷ 90", h.puan, (500 * h.toplamNet) / 90);
+  kontrol("1. oturum neti", h.oturumlar[1].net, (16 - 1) + (8 - 2 / 3) + (9 - 1 / 3) + (8 - 1 / 3));
+  kontrol("2. oturum neti", h.oturumlar[2].net, (12 - 2) + (15 - 1));
 }
 
 /* --------------------------------------------------------------- istatistik */
@@ -184,14 +189,14 @@ baslik("=== GERÇEKÇİ SENARYO ===");
 baslik("=== İSTATİSTİK ===");
 {
   const o = P.ozet([
-    { id: "a", ad: "D1", tarih: "2026-01-01", dersler: dogruDagit(100) },
-    { id: "b", ad: "D2", tarih: "2026-02-01", dersler: dogruDagit(120) },
+    { id: "a", ad: "D1", tarih: "2026-01-01", dersler: dogruDagit(60) },
+    { id: "b", ad: "D2", tarih: "2026-02-01", dersler: dogruDagit(72) },
   ]);
   esit("Adet", o.adet, 2);
-  kontrol("En yüksek", o.enYuksek, 375);
-  kontrol("En düşük", o.enDusuk, 312.5);
-  kontrol("Ortalama", o.ortalama, 343.75);
-  kontrol("Son puan (en yeni tarih)", o.sonPuan, 375);
+  kontrol("En yüksek", o.enYuksek, 400);
+  kontrol("En düşük", o.enDusuk, 333.3333333, 0.01);
+  kontrol("Ortalama", o.ortalama, 366.6666667, 0.01);
+  kontrol("Son puan (en yeni tarih)", o.sonPuan, 400);
 }
 {
   const o = P.ozet([]);
@@ -216,7 +221,7 @@ baslik("=== PERFORMANS ===");
 {
   const t0 = Date.now();
   const N = 10000;
-  for (let i = 0; i < N; i++) P.hesapla({ dersler: dogruDagit(100 + (i % 40)) });
+  for (let i = 0; i < N; i++) P.hesapla({ dersler: dogruDagit(60 + (i % 25)) });
   const sure = Date.now() - t0;
   console.log("    " + N + " hesaplama: " + sure + " ms (" + (sure / N).toFixed(4) + " ms/adet)");
   kontrol("Ortalama < 1 ms", sure / N < 1 ? 1 : 0, 1);

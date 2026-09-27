@@ -250,7 +250,7 @@
           { class: "canli-ic" },
           el("span", { class: "canli-etiket", text: "Tahmini LGS puanın" }),
           el("strong", { class: "canli-puan-sayi " + puanSinif(h.puan), text: puanBicim(h.puan) }),
-          el("div", { class: "canli-net", text: "Toplam net " + netBicim(h.toplamNet) + " / 160" }),
+          el("div", { class: "canli-net", text: "Toplam net " + netBicim(h.toplamNet) + " / " + LGS.TOPLAM_SORU }),
           el("div", { class: "canli-ozet", text: "D " + h.toplamD + " · Y " + h.toplamY + " · B " + h.toplamB })
         )
       );
@@ -287,7 +287,7 @@
     form.appendChild(
       el("p", {
         class: "ipucu",
-        text: "Net = Doğru − (Yanlış ÷ 3). Puan = (Toplam net ÷ 160) × 500. Bu bir tahmindir, resmî MEB puanı değildir.",
+        text: "Net = Doğru − (Yanlış ÷ 3). Puan = (Toplam net ÷ 90) × 500. Bu bir tahmindir, resmî MEB puanı değildir.",
       })
     );
 
