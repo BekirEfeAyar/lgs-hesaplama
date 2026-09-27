@@ -1,0 +1,50 @@
+rules_version = '2';
+
+// LGS Deneme Takipçisi — Firestore güvenlik kuralları.
+// Firebase konsolu → Firestore Database → Kurallar sekmesine yapıştır → Yayımla.
+//
+// Model:
+// - kullanicilar/{uid}: profil (yalnızca sahibi + moderatör okur)
+// - denemeler/{id}: deneme kaydı, "sahip" alanı = kullanıcının uid'si
+// - fotograflar/{id}: fotoğraf bilgisi (baytlar Storage'da)
+//
+// Moderatör SADECE OKUYABİLİR. Değişiklik/silme yalnızca kaydın sahibi.
+//
+// NOT: Aşağıdaki e-posta, veri/bulut-ayar.js içindeki listeyle aynı olmalı.
+// Değiştirirsen iki yeri de güncelle.
+service cloud.firestore {
+  match /databases/{db}/documents {
+
+    function girisVar() {
+      return request.auth != null;
+    }
+
+    function moderator() {
+      return girisVar()
+        && request.auth.token.email == 'bekirefeayar101@gmail.com';
+    }
+
+    function sahibi(data) {
+      return girisVar() && data.sahip == request.auth.uid;
+    }
+
+    match /kullanicilar/{uid} {
+      allow read: if (girisVar() && (request.auth.uid == uid || moderator()));
+      allow write: if girisVar() && request.auth.uid == uid;
+    }
+
+    match /denemeler/{id} {
+      allow create: if girisVar()
+        && request.resource.data.sahip == request.auth.uid;
+      allow read: if sahibi(resource.data) || moderator();
+      allow update, delete: if sahibi(resource.data);
+    }
+
+    match /fotograflar/{id} {
+      allow create: if girisVar()
+        && request.resource.data.sahip == request.auth.uid;
+      allow read: if sahibi(resource.data) || moderator();
+      allow delete: if sahibi(resource.data);
+    }
+  }
+}

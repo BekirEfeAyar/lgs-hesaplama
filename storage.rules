@@ -1,0 +1,26 @@
+rules_version = '2';
+
+// LGS Deneme Takipçisi — Storage güvenlik kuralları.
+// Firebase konsolu → Storage → Rules sekmesine yapıştır → Yayımla.
+//
+// Yanlış fotoğrafları: fotolar/{uid}/{denemeId}/{fotoId}.jpg
+// Okuma: sahibi + moderatör. Yazma/silme: yalnızca sahibi.
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function girisVar() {
+      return request.auth != null;
+    }
+
+    function moderator() {
+      return girisVar()
+        && request.auth.token.email == 'bekirefeayar101@gmail.com';
+    }
+
+    match /fotolar/{uid}/{denemeId}/{fotoId} {
+      allow read: if girisVar() && (request.auth.uid == uid || moderator());
+      allow write: if girisVar() && request.auth.uid == uid;
+      allow delete: if girisVar() && request.auth.uid == uid;
+    }
+  }
+}

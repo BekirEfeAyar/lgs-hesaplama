@@ -87,12 +87,15 @@
       liste[i] = deneme;
     }
     liste.sort((a, b) => (a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : b.olusturma - a.olusturma));
-    return denemeleriYaz(liste);
+    const ok = denemeleriYaz(liste);
+    if (ok && LGS.bulut) LGS.bulut.denemeYukleArkaPlan(deneme);
+    return ok;
   }
 
   function denemeSil(id) {
     const liste = denemeleriGetir().filter((d) => d.id !== id);
     denemeleriYaz(liste);
+    if (LGS.bulut) LGS.bulut.denemeSilArkaPlan(id);
     // Fotoğrafları da temizle
     return fotoSilDeneme(id);
   }
@@ -139,18 +142,41 @@
     );
   }
 
-  /** Fotoğrafı kaydeder. */
-  function fotoEkle(denemeId, kayit) {
+  /** Fotoğrafı kaydeder. sabitId verilirse (bulut eşitlemede) o id korunur. */
+  function fotoEkle(denemeId, kayit, sabitId) {
     const tam = {
-      id: yeniId("f"),
+      id: sabitId || yeniId("f"),
       denemeId: denemeId,
       ad: kayit.ad || "Yanlışlar",
       tur: kayit.tur || "image/jpeg",
       boyut: kayit.boyut || 0,
       veri: kayit.veri,
-      tarih: Date.now(),
+      tarih: kayit.tarih || Date.now(),
     };
-    return tx("readwrite", (depo) => depo.add(tam)).then(() => tam);
+    return tx("readwrite", (depo) => depo.add(tam)).then(() => {
+      if (LGS.bulut) LGS.bulut.fotoYukleArkaPlan(denemeId, tam);
+      return tam;
+    });
+  }
+
+  /** Fotoğrafı id'siyle getirir (yoksa null). */
+  function fotoGetir(id) {
+    return tx("readonly", (depo) => depo.get(id)).then((v) => v || null);
+  }
+
+  /** Fotoğrafı koyar (varsa üzerine yazar — bulut eşitlemede kullanılır). */
+  function fotoKoy(foto) {
+    const tam = {
+      id: foto.id || yeniId("f"),
+      denemeId: foto.denemeId,
+      ad: foto.ad || "Yanlışlar",
+      tur: foto.tur || "image/jpeg",
+      boyut: foto.boyut || 0,
+      veri: foto.veri,
+      tarih: foto.tarih || Date.now(),
+    };
+    if (foto.yol) tam.yol = foto.yol; // bulut dosya yolu (silmede lazım)
+    return tx("readwrite", (depo) => depo.put(tam)).then(() => tam);
   }
 
   /** Bir denemenin fotoğraflarını listeler. */
@@ -161,7 +187,13 @@
   }
 
   function fotoSil(id) {
-    return tx("readwrite", (depo) => depo.delete(id));
+    // Bulut silme için önce yol bilgisini al (kayıt silinmeden önce)
+    const yolSoz = fotoGetir(id).then((f) => (f && f.yol ? f.yol : null)).catch(() => null);
+    return tx("readwrite", (depo) => depo.delete(id)).then(() => {
+      if (LGS.bulut) {
+        yolSoz.then((yol) => LGS.bulut.fotoSilArkaPlan(id, yol));
+      }
+    });
   }
 
   function fotoSilDeneme(denemeId) {
@@ -363,6 +395,8 @@
     fotoListele,
     fotoSil,
     fotoSilDeneme,
+    fotoGetir,
+    fotoKoy,
     resmiKucult,
     // lise
     liseleriGetir,

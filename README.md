@@ -213,13 +213,77 @@ npx serve .
 python -m http.server 8000
 ```
 
-### Test
+## Hesap sistemi (e-posta ile giriş + veritabanı)
 
-Puan motoru testleri tarayıcısız çalışır:
+Site varsayılan olarak **tamamen yerel** çalışır: hesap yok, veri yalnızca tarayıcıda.
+E-posta ile girişi açmak için ücretsiz Firebase projesi gerekir (kurulum ~10 dakika,
+sonrası bedava katmanda kalır).
+
+### Adım adım kurulum (site sahibi yapar)
+
+1. https://console.firebase.google.com → **Proje oluştur** → ad: `lgs-hesaplama`
+   (Analytics'i kapatabilirsin, şart değil) → Oluştur.
+2. Sol menü **Authentication** → **Sign-in method** → **E-posta/Şifre** →
+   **Etkinleştir** → Kaydet.
+3. Sol menü **Firestore Database** → **Veritabanı oluştur** →
+   **Üretim modunda başlat** → konum `eur3 (Europe)` → Etkinleştir.
+4. Sol menü **Storage** → **Başlayın** → aynı bölge → Bitti.
+5. Sol üst dişli → **Proje ayarları** → en altta **"Uygulamalar"** →
+   `</>` (Web) → takma ad `lgs` → **Uygulamayı kaydet**.
+   Ekrana çıkan `firebaseConfig` içindeki 6 değeri kopyala.
+6. `veri/bulut-ayar.js` dosyasını aç:
+   - `kullan: false` → `kullan: true`
+   - `firebase: { ... }` içine 6 değeri yapıştır.
+7. Firebase konsolunda **Firestore Database → Kurallar** sekmesi:
+   depodaki `firestore.rules` dosyasının **tamamını** yapıştır → **Yayımla**.
+8. **Storage → Rules** sekmesi: `storage.rules` dosyasının tamamını
+   yapıştır → **Yayımla**.
+9. Değişikliği yükle:
 
 ```bash
-node test/puan.test.js
+git add .
+git commit -m "hesap sistemi acildi"
+git push
 ```
+
+2 dakika sonra sitede **Hesap** sekmesi giriş formu gösterir.
+
+### Nasıl çalışır?
+
+- Öğrenci **Hesap** sekmesinden e-posta + şifreyle kaydolur/giriş yapar.
+- Girişte yerel denemeler buluta **birleştirilir** (aynı kayıtta yenisi kazanır,
+  hiçbir şey silinmez). Sonrası otomatik: her kaydetme buluta da yazılır.
+- Fotoğraflar Storage'a JPG olarak yüklenir (zaten küçültülmüş halleri).
+- Çıkış yapılsa da cihazdaki kopya durur; site hesapsız da tam çalışır.
+- **Gizlilik:** giriş ekranında yazar — moderatör karneleri görebilir.
+  Şifreler Firebase'de saklanır, kimse (site sahibi dahil) göremez.
+
+### Moderatör (bekirefeayar101@gmail.com)
+
+- Bu adresle giriş yapınca **🛡️ Moderatör paneli** açılır.
+- Kayıtlı kullanıcı listesi → **Karneleri gör** → deneme + ders dökümü + fotoğraflar.
+- **Salt okunur:** kurallar (`firestore.rules`, `storage.rules`) yazmayı ve
+  silmeyi yasaklar. Kural dosyalarında e-posta iki yerde yazılıdır
+  (`bulut-ayar.js` + kurallar); adres değişirse üçünü de güncelle.
+
+### Ücretsiz katman yeter mi?
+
+Spark (bedava) katman: günde 50.000 okuma / 20.000 yazma, 1 GB depolama.
+Birkaç yüz öğrenci için rahat yeter. Kotalar Firebase konsolunda görünür.
+
+### Test
+
+```bash
+node test/puan.test.js     # 52 test — puan motoru
+```
+
+Bulut birleştirme mantığı (`birlestirDeneme`, moderatör e-posta kontrolü)
+Firebase gerektirmez, mantık testleri depo dışındaki betiklerle çalıştırılır.
+Gerçek bulut akışı (kayıt → giriş → eşitleme → moderatör görüntüleme)
+Firebase projesi kurulduktan sonra iki tarayıcıda el ile doğrulanmalıdır:
+1. A cihazında hesap aç, deneme + fotoğraf ekle.
+2. B cihazında aynı hesapla gir → verilerin geldiğini gör.
+3. Moderatör mailiyle gir → Hesap sekmesinde kullanıcıyı ve karnes çatısını gör.
 
 ### Sürüm numarası
 

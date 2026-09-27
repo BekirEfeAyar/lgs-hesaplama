@@ -12,6 +12,7 @@
     denemeler: { ad: "Denemeler", ciz: (k) => LGS.denemeler.ciz(k) },
     lise: { ad: "Lise Rehberi", ciz: (k) => LGS.lise.ciz(k) },
     veriler: { ad: "Veriler", ciz: (k) => LGS.veriler.ciz(k) },
+    hesap: { ad: "Hesap", ciz: (k) => LGS.hesap.ciz(k) },
   };
 
   let aktifSayfa = "denemeler";
@@ -88,6 +89,11 @@
 
   function baslat() {
     temaYukle();
+
+    // Bulut yapılandırılmışsa SDK'yı yükle (yapılandırılmamışsa sessizce atlanır)
+    if (LGS.bulut) {
+      LGS.bulut.baslat();
+    }
 
     const temaBtn = $("#tema-btn");
     if (temaBtn) temaBtn.addEventListener("click", temaDegistir);

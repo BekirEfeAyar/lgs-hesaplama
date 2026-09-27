@@ -1044,6 +1044,62 @@ textarea {
   opacity: 0.75;
 }
 
+/* ---------------------------------------------------------------- hesap */
+
+.hesap-satir {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.hesap-avatar {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--ana), #a855f7);
+  color: #fff;
+  font-size: 22px;
+  font-weight: 800;
+  flex: 0 0 auto;
+}
+
+.hesap-bilgi {
+  min-width: 0;
+}
+
+.hesap-bilgi strong {
+  display: block;
+  font-size: 16px;
+  overflow-wrap: anywhere;
+}
+
+.hesap-rol {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: var(--sekme-y);
+  background: var(--yuzey-2);
+  border: 1px solid var(--kenar);
+  color: var(--metin-soluk);
+}
+
+.hesap-rol.mod {
+  background: color-mix(in srgb, var(--ana) 14%, transparent);
+  border-color: transparent;
+  color: var(--ana);
+}
+
+input:disabled,
+button:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+
 /* ---------------------------------------------------------------- yönetim listesi */
 
 .yonetim-liste {
