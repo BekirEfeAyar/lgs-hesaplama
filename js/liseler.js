@@ -252,6 +252,17 @@
     LGS.uygulama.ciz();
   }
 
+  /**
+   * Dışarıdan (örn. deneme kartı) verilen puanla Lise Rehberi'ni açar.
+   * Sayfalama sıfırlanır, kullanıcıya hangi puana bakıldığı söylenir.
+   */
+  function puanaGit(puan, etiket) {
+    durum.puan = Math.max(0, Math.min(LGS.MAX_PUAN, Number(puan) || 0));
+    gosterilen = SAYFA_BOYUTU;
+    LGS.uygulama.sayfayaGit("lise");
+    bildir((etiket || "Deneme") + " puanı (" + puanBicim(durum.puan) + ") ile girilebilen liseler");
+  }
+
   function sonuclar() {
     const kap = el("div", { id: "sonuc-alan" });
     const tumu = D.liseleriGetir();
@@ -453,5 +464,5 @@
     );
   }
 
-  LGS.lise = { ciz, durum: () => durum };
+  LGS.lise = { ciz, durum: () => durum, puanaGit };
 })(window.LGS);

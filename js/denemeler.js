@@ -147,7 +147,8 @@
       el(
         "div",
         { class: "deneme-eylem" },
-        el("button", { class: "btn kucuk", text: "Aç", onClick: () => denemePenceresi(d.id) }),
+        el("button", { class: "btn kucuk birincil", text: "🎯 Bu puanla liseler", title: "Bu denemenin puanıyla girilebilen liseleri gör", onClick: () => LGS.lise.puanaGit(h.puan, d.ad || "Deneme") }),
+        el("button", { class: "btn kucuk hayalet", text: "Aç", onClick: () => denemePenceresi(d.id) }),
         el("button", { class: "btn kucuk hayalet", text: "Fotoğraf", onClick: () => fotograflariAc(d.id) }),
         el("button", { class: "btn kucuk hayalet sil", text: "Sil", onClick: () => silOnayla(d) })
       )
@@ -299,6 +300,18 @@
       icerik: form,
       eylemler: [
         { metin: "Vazgeç", tur: "hayalet" },
+        {
+          metin: "🎯 Liseler",
+          tur: "hayalet",
+          onTikla: () => {
+            // Kaydetmeden: formdaki güncel değerlerle liselere bak
+            const veri = veriyiTopla();
+            const hh = LGS.puan.hesapla(veri);
+            LGS.arayuz.pencereKapat();
+            LGS.lise.puanaGit(hh.puan, (veri.ad || "").trim() || "Deneme");
+            return false;
+          },
+        },
         {
           metin: "Kaydet",
           tur: "birincil",
