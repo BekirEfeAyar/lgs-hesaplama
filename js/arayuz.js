@@ -187,10 +187,10 @@
 
   /** Puanı renk sınıfına çevirir (grafik/etiket için). */
   function puanSinif(p) {
-    if (p >= 420) return "seviye-ust";
-    if (p >= 370) return "seviye-yuksek";
-    if (p >= 320) return "seviye-orta";
-    if (p >= 260) return "seviye-dusuk";
+    if (p >= 450) return "seviye-ust";
+    if (p >= 400) return "seviye-yuksek";
+    if (p >= 350) return "seviye-orta";
+    if (p >= 300) return "seviye-dusuk";
     return "seviye-cok-dusuk";
   }
 

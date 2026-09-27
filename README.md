@@ -54,8 +54,14 @@ Kurulum, sunucu, hesap yönetimi, üyelik — hiçbir şey gerekmiyor. Siteyi a�
 ```
 Net  = Doğru − (Yanlış ÷ 3)
 Boş  = Soru − Doğru − Yanlış
-Puan = (Toplam Net ÷ 90) × 500
+Puan = 194,75 + Σ (Ders Neti × Ders Katsayısı)
 ```
+
+Katsayılar (2025 verilerine dayalı yayınlanmış tahmin modeli):
+Türkçe ×4,348 · Matematik ×4,2538 · Fen ×4,123 ·
+İnkılap ×1,666 · Din ×1,899 · Yabancı Dil ×1,5075.
+Full net ≈ 500 verir. Katsayılı model, MEB'in standart puan hesabına
+doğrusal yaklaştırımdır — aynı nette Türkçe/Matematik/Fen ağırlığı daha fazladır.
 
 ### Güncel LGS soru dağılımı (90 soru, MEB Kılavuzu)
 
@@ -81,7 +87,7 @@ Puan = (Toplam Net ÷ 90) × 500
 | Fen | 15 | 3 | 2 | 14,00 |
 | **Toplam** | **68** | **16** | **6** | **62,67** |
 
-→ Puan = (62,67 ÷ 90) × 500 = **348,1**
+→ Puan = 194,75 + (15×4,348 + 7,33×1,666 + 8,67×1,899 + 7,67×1,5075 + 10×4,2538 + 14×4,123) = **400,5**
 
 ---
 

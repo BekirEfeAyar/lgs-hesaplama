@@ -3,7 +3,11 @@
    --------------------------------------------------------------------------
    Net  = Doğru − (Yanlış ÷ 3)
    Boş  = Soru − Doğru − Yanlış
-   Puan = (Toplam Net ÷ 90) × 500
+   Puan = 194.752082 + Σ (Ders Neti × Ders Katsayısı)
+
+   Katsayılar: Türkçe 4.348, Matematik 4.2538, Fen 4.123,
+               İnkılap 1.666, Din 1.899, Yabancı Dil 1.5075.
+   (2025 verilerine dayalı yayınlanmış tahmin modeli; full net ≈ 500.)
 
    Uyarı: Bu, resmî MEB puanı DEĞİLDİR. MEB puanı sınav ortalama ve standart
    sapma verileriyle dönüştürülerek hesaplanır. Buradaki değer deneme
@@ -77,7 +81,13 @@
       });
     });
 
-    const puan = (toplamNet / LGS.TOPLAM_SORU) * LGS.MAX_PUAN;
+    // MEB tarzı katsayılı puan: taban + her dersin neti × katsayısı
+    let puan = LGS.PUAN_TABANI;
+    satirlar.forEach((s) => {
+      puan += s.net * (LGS.KATSAYI[s.id] || 0);
+    });
+    // Güvenli aralık: MEB puanı 100-500 bandındadır
+    puan = Math.max(100, Math.min(LGS.MAX_PUAN, puan));
 
     return {
       dersler: satirlar,

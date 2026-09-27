@@ -287,7 +287,7 @@
     form.appendChild(
       el("p", {
         class: "ipucu",
-        text: "Net = Doğru − (Yanlış ÷ 3). Puan = (Toplam net ÷ 90) × 500. Bu bir tahmindir, resmî MEB puanı değildir.",
+        text: "Net = Doğru − (Yanlış ÷ 3). Puan = 194,75 + her dersin neti × katsayısı (Türkçe/Mat/Fen ×4 civarı). Bu bir tahmindir, resmî MEB puanı değildir.",
       })
     );
 
