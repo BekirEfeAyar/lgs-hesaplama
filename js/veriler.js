@@ -23,20 +23,41 @@
 
   function hesapBilgisi() {
     const denemeler = D.denemeleriGetir();
+    const liseler = D.liseleriGetir();
+    const veriliIller = new Set(liseler.map((l) => l.sehir));
+    const toplamIlce = IL_ILCE_TUMU.reduce((t, x) => t + x.ilceler.length, 0);
+
     const kart = el("div", { class: "kart" });
-    kart.appendChild(el("div", { class: "kart-bas", text: "Bu cihazdaki veriler" }));
+    kart.appendChild(el("div", { class: "kart-bas", text: "Kapsam" }));
+
     const tablo = el("div", { class: "mini-tablo" });
+    tablo.appendChild(satir("İl (tamamı)", String(IL_ILCE_TUMU.length) + " / 81"));
+    tablo.appendChild(satir("İlçe (tamamı)", String(toplamIlce)));
+    tablo.appendChild(satir("Verisi olan il", String(veriliIller.size)));
+    tablo.appendChild(satir("Kayıtlı lise", String(liseler.length)));
+    tablo.appendChild(satir("Resmî işaretli", String(liseler.filter((l) => l.resmi).length)));
     tablo.appendChild(satir("Kayıtlı deneme", String(denemeler.length)));
-    tablo.appendChild(satir("Kayıtlı lise", String(D.liseleriGetir().length)));
     const fotoSatiri = satir("Yüklenen fotoğraf", "…");
     tablo.appendChild(fotoSatiri);
     tablo.appendChild(satir("Toplam soru", String(LGS.TOPLAM_SORU)));
     tablo.appendChild(satir("Puan üst sınırı", String(LGS.MAX_PUAN)));
     Promise.all(denemeler.map((d) => D.fotoListele(d.id))).then((hepsi) => {
-      const toplam = hepsi.reduce((t, h) => t + h.length, 0);
-      fotoSatiri.querySelector("strong").textContent = String(toplam);
+      fotoSatiri.querySelector("strong").textContent = String(hepsi.reduce((t, h) => t + h.length, 0));
     });
     kart.appendChild(tablo);
+
+    const eksik = IL_ILCE_TUMU.length - veriliIller.size;
+    if (eksik > 0) {
+      kart.appendChild(
+        el(
+          "div",
+          { class: "uyari-kutu", style: { marginTop: "12px" } },
+          el("strong", { text: eksik + " il için lise verisi yok. " }),
+          "İl ve ilçe listesi tam (81 il / " + toplamIlce + " ilçe) ama lise taban puanları yalnızca " +
+            veriliIller.size + " il için eklendi. Aşağıdaki 'Toplu içe aktar' ile kendi resmî listeni ekleyebilirsin."
+        )
+      );
+    }
     return kart;
   }
 
@@ -153,21 +174,43 @@
     const l = lise || { ad: "", sehir: "", ilce: "", tur: "fen", taban: 300, dilim: "", resmi: true, not: "" };
 
     const form = el("div", { class: "form" });
-    form.appendChild(
-      el(
-        "div",
-        { class: "alan-izgara" },
-        alan("Lise adı", el("input", { type: "text", id: "l-ad", value: l.ad, placeholder: "örn. Atatürk Fen Lisesi" }))
-      )
-    );
-    form.appendChild(
-      el(
-        "div",
-        { class: "alan-izgara" },
-        alan("Şehir", el("input", { type: "text", id: "l-sehir", value: l.sehir, placeholder: "örn. Ankara" })),
-        alan("İlçe", el("input", { type: "text", id: "l-ilce", value: l.ilce, placeholder: "örn. Çankaya" }))
-      )
-    );
+    form.appendChild(el("div", { class: "alan-izgara" }, alan("Lise adı", el("input", { type: "text", id: "l-ad", value: l.ad, placeholder: "örn. Atatürk Fen Lisesi" }))));
+
+    /* --- İl: 81 ilin listesi --- */
+    const ilSec = el("select", { id: "l-sehir", class: "secim" });
+    ilSec.appendChild(el("option", { value: "", text: "— İl seç —" }));
+    LGS.iller()
+      .forEach((ad) => {
+        const sayi = D.liseleriGetir().filter((x) => x.sehir === ad).length;
+        ilSec.appendChild(el("option", { value: ad, text: sayi ? ad + " (" + sayi + ")" : ad, selected: ad === l.sehir }));
+      });
+    if (l.sehir && !LGS.iller().includes(l.sehir)) {
+      ilSec.appendChild(el("option", { value: l.sehir, text: l.sehir + " (listede yok)", selected: true }));
+    }
+
+    /* --- İlçe: seçilen ilin ilçeleri --- */
+    const ilceSec = el("select", { id: "l-ilce", class: "secim" });
+
+    function ilceDoldur(secili) {
+      const ilAdi = ilSec.value;
+      const ilceler = ilAdi ? LGS.ilceler(ilAdi) : [];
+      ilceSec.innerHTML = "";
+      if (!ilAdi) {
+        ilceSec.appendChild(el("option", { value: "", text: "Önce il seç" }));
+        ilceSec.disabled = true;
+        return;
+      }
+      ilceSec.disabled = false;
+      ilceSec.appendChild(el("option", { value: "", text: "İlçe seç (" + ilceler.length + ")" }));
+      ilceler.forEach((d) => ilceSec.appendChild(el("option", { value: d, text: d, selected: d === secili })));
+      if (secili && !ilceler.includes(secili)) {
+        ilceSec.appendChild(el("option", { value: secili, text: secili + " (listede yok)", selected: true }));
+      }
+    }
+    ilSec.addEventListener("change", () => ilceDoldur(""));
+    ilceDoldur(l.ilce);
+
+    form.appendChild(el("div", { class: "alan-izgara" }, alan("İl", ilSec), alan("İlçe", ilceSec)));
 
     const turSec = el("select", { id: "l-tur", class: "secim" });
     LGS.LISE_TURLERI.forEach((t) => turSec.appendChild(el("option", { value: t.id, text: t.ad, selected: t.id === l.tur })));
@@ -192,9 +235,7 @@
         el("span", { class: "anahtar-etiket", text: "Bu veri resmî (kendi girdiğim)" })
       )
     );
-    form.appendChild(
-      el("p", { class: "ipucu", text: "Resmî olarak işaretlediğin kayıtlarda listede 'örnek veri' uyarısı çıkmaz." })
-    );
+    form.appendChild(el("p", { class: "ipucu", text: "Resmî olarak işaretlediğin kayıtlarda listede 'örnek veri' uyarısı çıkmaz." }));
     form.appendChild(alan("Not", el("textarea", { id: "l-not", rows: "2", value: l.not || "" })));
 
     pencere({
@@ -209,8 +250,8 @@
             const kayit = {
               id: lise ? lise.id : undefined,
               ad: document.getElementById("l-ad").value.trim(),
-              sehir: document.getElementById("l-sehir").value.trim(),
-              ilce: document.getElementById("l-ilce").value.trim(),
+              sehir: document.getElementById("l-sehir").value,
+              ilce: document.getElementById("l-ilce").value,
               tur: document.getElementById("l-tur").value,
               taban: Number(document.getElementById("l-taban").value) || 0,
               dilim: document.getElementById("l-dilim").value === "" ? null : Number(document.getElementById("l-dilim").value),
@@ -219,6 +260,10 @@
             };
             if (!kayit.ad) {
               bildir("Lise adı boş olamaz", "hata");
+              return false;
+            }
+            if (!kayit.sehir) {
+              bildir("İl seçmelisin", "hata");
               return false;
             }
             D.liseKaydet(kayit);
@@ -238,14 +283,17 @@
       class: "kod-alani",
       placeholder:
         "Her satıra bir lise. Ayırıcı olarak ; veya | kullanabilirsin.\n\n" +
-        "Lise adı; Şehir; İlçe; Taban puan; Yüzdelik dilim; Tür\n" +
+        "Lise adı; İl; İlçe; Taban puan; Yüzdelik dilim; Tür\n" +
         "Atatürk Fen Lisesi; Ankara; Çankaya; 425,5; 1,2; fen\n" +
         "Nilüfer MTAL; Bursa; Nilüfer; 318,25; 8,5; mtal\n\n" +
+        "İl adı 81 ilin gerçek adlarından biri olmalı (örn. İstanbul, Ankara, Şanlıurfa).\n" +
         "Sadece adı yazarsan kayıt 'Diğer' türünde eklenir.",
     });
 
     const form = el("div", { class: "form" });
-    form.appendChild(el("p", { class: "ipucu", text: "Excel'den kopyalayıp yapıştırabilirsin. Türkçe karakterler ve ondalık ayırıcı olarak virgül veya nokta desteklenir." }));
+    form.appendChild(
+      el("p", { class: "ipucu", text: "Excel'den kopyalayıp yapıştırabilirsin. Türkçe karakterler ve ondalık ayırıcı olarak virgül veya nokta desteklenir. İl adı listede yoksa kayıt yine de eklenir ama uyarı listelenir." })
+    );
     form.appendChild(alani);
     form.appendChild(
       el("label", { class: "anahtar" },
@@ -254,10 +302,24 @@
         el("span", { class: "anahtar-etiket", text: "Bunları resmî veri olarak işaretle" })
       )
     );
-    form.appendChild(el("div", { class: "sayac-hint", id: "onizleme", text: "0 satır algılandı" }));
-    alani.addEventListener("input", () => {
-      document.getElementById("onizleme").textContent = ayikla(alani.value).length + " satır algılandı";
-    });
+    const onizleme = el("div", { class: "sayac-hint", id: "onizleme", text: "0 satır algılandı" });
+    form.appendChild(onizleme);
+    const uyariKutusu = el("div", { id: "toplu-uyari" });
+    form.appendChild(uyariKutusu);
+
+    function onizlemeYenile() {
+      const satirlar = ayikla(alani.value);
+      const bilinenIl = new Set(IL_ILCE_TUMU.map((x) => x.il));
+      const bilinmeyen = [...new Set(satirlar.map((s) => s.sehir).filter((s) => s && !bilinenIl.has(s)))];
+      onizleme.textContent = satirlar.length + " satır algılandı";
+      uyariKutusu.innerHTML = "";
+      if (bilinmeyen.length) {
+        uyariKutusu.appendChild(
+          el("p", { class: "uyari", text: "⚠ Listede olmayan il adı: " + bilinmeyen.join(", ") })
+        );
+      }
+    }
+    alani.addEventListener("input", onizlemeYenile);
 
     pencere({
       baslik: "Toplu içe aktar",
@@ -274,9 +336,12 @@
               return false;
             }
             const resmi = document.getElementById("toplu-resmi").checked;
+            const bilinenIl = new Set(IL_ILCE_TUMU.map((x) => x.il));
             let eklendi = 0;
+            let ilBilinmeyen = 0;
             satirlar.forEach((s) => {
               if (!s.ad) return;
+              if (s.sehir && !bilinenIl.has(s.sehir)) ilBilinmeyen++;
               D.liseKaydet({
                 ad: s.ad,
                 sehir: s.sehir || "Bilinmiyor",
@@ -289,7 +354,7 @@
               });
               eklendi++;
             });
-            bildir(eklendi + " lise eklendi");
+            bildir(eklendi + " lise eklendi" + (ilBilinmeyen ? " · " + ilBilinmeyen + " kayıtta il adı tanınmadı" : ""));
             LGS.uygulama.ciz();
           },
         },

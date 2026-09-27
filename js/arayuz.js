@@ -20,7 +20,9 @@
         if (k === "class") oge.className = v;
         else if (k === "html") oge.innerHTML = v;
         else if (k === "text") oge.textContent = v;
-        else if (k.startsWith("on") && typeof v === "function") oge.addEventListener(k.slice(2), v);
+        // addEventListener olay adları küçük harf duyarlıdır: onClick -> "click"
+        else if (k.startsWith("on") && typeof v === "function")
+          oge.addEventListener(k.slice(2).toLowerCase(), v);
         else if (k === "style" && typeof v === "object") Object.assign(oge.style, v);
         else oge.setAttribute(k, v === true ? "" : v);
       });
