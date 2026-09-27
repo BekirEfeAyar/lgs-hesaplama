@@ -681,9 +681,7 @@ textarea {
 /* ---------------------------------------------------------------- canlı puan */
 
 .canli-puan {
-  position: sticky;
-  top: 74px;
-  z-index: 5;
+  /* Not: sticky YAPMA — modal içinde kayarken tabloyu örtüyordu. */
 }
 
 .canli-ic {
@@ -1397,10 +1395,6 @@ textarea {
     grid-template-columns: 1.4fr 0.5fr 0.9fr 0.9fr 0.9fr;
     padding: 8px;
     font-size: 13px;
-  }
-
-  .canli-puan {
-    position: static;
   }
 
   .canli-puan-sayi {

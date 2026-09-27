@@ -5,7 +5,7 @@
 const LGS = (window.LGS = window.LGS || {});
 
 /** Sürüm: index.html'deki ?v= parametresi ile birlikte artırılır (önbellek için). */
-LGS.SURUM = 3;
+LGS.SURUM = 4;
 
 /** Resmî olmayan uyarı metni — tek yerden yönetilir. */
 LGS.OTORITE = "MEB";
