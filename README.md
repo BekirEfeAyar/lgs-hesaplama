@@ -224,21 +224,19 @@ sonrası bedava katmanda kalır).
 1. https://console.firebase.google.com → **Proje oluştur** → ad: `lgs-hesaplama`
    (Analytics'i kapatabilirsin, şart değil) → Oluştur.
 2. Sol menü **Authentication** → **Sign-in method** → **E-posta/Şifre** →
-   **Etkinleştir** → Kaydet.
+   **Etkinleştir** → Kaydet. (Bu sayfayı bir kez açmak servisi hazırlar.)
 3. Sol menü **Firestore Database** → **Veritabanı oluştur** →
    **Üretim modunda başlat** → konum `eur3 (Europe)` → Etkinleştir.
-4. Sol menü **Storage** → **Başlayın** → aynı bölge → Bitti.
-5. Sol üst dişli → **Proje ayarları** → en altta **"Uygulamalar"** →
+   (Storage GEREKMEZ — fotoğraflar Firestore belgelerinde durur.)
+4. Sol üst dişli → **Proje ayarları** → en altta **"Uygulamalar"** →
    `</>` (Web) → takma ad `lgs` → **Uygulamayı kaydet**.
    Ekrana çıkan `firebaseConfig` içindeki 6 değeri kopyala.
-6. `veri/bulut-ayar.js` dosyasını aç:
+5. `veri/bulut-ayar.js` dosyasını aç:
    - `kullan: false` → `kullan: true`
    - `firebase: { ... }` içine 6 değeri yapıştır.
-7. Firebase konsolunda **Firestore Database → Kurallar** sekmesi:
+6. Firebase konsolunda **Firestore Database → Kurallar** sekmesi:
    depodaki `firestore.rules` dosyasının **tamamını** yapıştır → **Yayımla**.
-8. **Storage → Rules** sekmesi: `storage.rules` dosyasının tamamını
-   yapıştır → **Yayımla**.
-9. Değişikliği yükle:
+7. Değişikliği yükle:
 
 ```bash
 git add .
@@ -253,7 +251,8 @@ git push
 - Öğrenci **Hesap** sekmesinden e-posta + şifreyle kaydolur/giriş yapar.
 - Girişte yerel denemeler buluta **birleştirilir** (aynı kayıtta yenisi kazanır,
   hiçbir şey silinmez). Sonrası otomatik: her kaydetme buluta da yazılır.
-- Fotoğraflar Storage'a JPG olarak yüklenir (zaten küçültülmüş halleri).
+- Fotoğraflar Firestore belgelerinde durur (1400px JPEG ~100-300KB, belge
+  limiti 1MB). Ayrı Storage kurulumu gerekmez, kredi kartı/fatura istemez.
 - Çıkış yapılsa da cihazdaki kopya durur; site hesapsız da tam çalışır.
 - **Gizlilik:** giriş ekranında yazar — moderatör karneleri görebilir.
   Şifreler Firebase'de saklanır, kimse (site sahibi dahil) göremez.
@@ -262,9 +261,9 @@ git push
 
 - Bu adresle giriş yapınca **🛡️ Moderatör paneli** açılır.
 - Kayıtlı kullanıcı listesi → **Karneleri gör** → deneme + ders dökümü + fotoğraflar.
-- **Salt okunur:** kurallar (`firestore.rules`, `storage.rules`) yazmayı ve
-  silmeyi yasaklar. Kural dosyalarında e-posta iki yerde yazılıdır
-  (`bulut-ayar.js` + kurallar); adres değişirse üçünü de güncelle.
+- **Salt okunur:** kurallar (`firestore.rules`) yazmayı ve
+  silmeyi yasaklar. Kural dosyasında e-posta iki yerde yazılıdır
+  (`bulut-ayar.js` + kurallar); adres değişirse ikisini de güncelle.
 
 ### Ücretsiz katman yeter mi?
 

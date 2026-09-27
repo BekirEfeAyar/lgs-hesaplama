@@ -175,7 +175,6 @@
       veri: foto.veri,
       tarih: foto.tarih || Date.now(),
     };
-    if (foto.yol) tam.yol = foto.yol; // bulut dosya yolu (silmede lazım)
     return tx("readwrite", (depo) => depo.put(tam)).then(() => tam);
   }
 
@@ -187,12 +186,8 @@
   }
 
   function fotoSil(id) {
-    // Bulut silme için önce yol bilgisini al (kayıt silinmeden önce)
-    const yolSoz = fotoGetir(id).then((f) => (f && f.yol ? f.yol : null)).catch(() => null);
     return tx("readwrite", (depo) => depo.delete(id)).then(() => {
-      if (LGS.bulut) {
-        yolSoz.then((yol) => LGS.bulut.fotoSilArkaPlan(id, yol));
-      }
+      if (LGS.bulut) LGS.bulut.fotoSilArkaPlan(id);
     });
   }
 

@@ -16,13 +16,11 @@
     "https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js",
     "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js",
     "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js",
-    "https://www.gstatic.com/firebasejs/10.12.5/firebase-storage-compat.js",
   ];
 
   let app = null;
   let auth = null;
   let db = null;
-  let depoAlan = null;
   let baslatildi = false;
   let baslatiliyor = null;
   let suAnki = null; // { uid, eposta }
@@ -92,8 +90,6 @@
         auth = firebase.auth();
         // eslint-disable-next-line no-undef
         db = firebase.firestore();
-        // eslint-disable-next-line no-undef
-        depoAlan = firebase.storage();
         baslatildi = true;
         auth.onAuthStateChanged(async (k) => {
           suAnki = k ? { uid: k.uid, eposta: k.email || "" } : null;
@@ -170,9 +166,9 @@
     }
   }
 
-  function mezarEkle(tur, id, yol) {
+  function mezarEkle(tur, id) {
     const m = mezarOku();
-    m[tur].push({ id: id, yol: yol || null, tarih: Date.now() });
+    m[tur].push({ id: id, tarih: Date.now() });
     mezarYaz(m);
   }
 
@@ -233,15 +229,9 @@
   }
 
   async function denemeSilBulut(id) {
-    // Fotoğraf belgelerini + dosyaları da temizle
+    // Fotoğraf belgelerini de temizle
     const fSnap = await db.collection("fotograflar").where("sahip", "==", suAnki.uid).where("denemeId", "==", id).get();
     for (const doc of fSnap.docs) {
-      const v = doc.data();
-      try {
-        if (v.yol) await depoAlan.ref(v.yol).delete();
-      } catch (e) {
-        /* dosya zaten yoksa geç */
-      }
       await doc.ref.delete();
     }
     await db.collection("denemeler").doc(id).delete();
@@ -261,28 +251,18 @@
 
   /* ------------------------------------------------------------ fotoğraf */
 
-  function veriUrlBlob(veriUrl) {
-    const parca = veriUrl.split(",");
-    const mime = (parca[0].match(/data:(.*?);/) || [])[1] || "image/jpeg";
-    const bin = typeof atob !== "undefined" ? atob(parca[1]) : Buffer.from(parca[1], "base64").toString("binary");
-    const dizi = new Uint8Array(bin.length);
-    for (let i = 0; i < bin.length; i++) dizi[i] = bin.charCodeAt(i);
-    return { blob: new Blob([dizi], { type: mime }), mime: mime };
-  }
-
   async function fotoYukle(denemeId, kayit) {
     // kayit: { id?, ad, veri(dataURL), boyut }
+    // Fotoğraf baytı doğrudan belgeye yazılır (1400px JPEG ~100-300KB,
+    // Firestore belge limiti 1MB — güvenli aralıkta).
     const fotoId = kayit.id || LGS.depo.yeniId("f");
-    const yol = "fotolar/" + suAnki.uid + "/" + denemeId + "/" + fotoId + ".jpg";
-    const { blob } = veriUrlBlob(kayit.veri);
-    await depoAlan.ref(yol).put(blob, { contentType: "image/jpeg" });
     const belge = {
       id: fotoId,
       denemeId: denemeId,
       sahip: suAnki.uid,
       ad: kayit.ad || "Yanlışlar",
       boyut: kayit.boyut || 0,
-      yol: yol,
+      veri: kayit.veri,
       tarih: Date.now(),
     };
     await db.collection("fotograflar").doc(fotoId).set(belge);
@@ -294,19 +274,14 @@
     fotoYukle(denemeId, kayit).catch((e) => console.warn("Fotoğraf buluta yüklenemedi:", e && e.message));
   }
 
-  async function fotoSilBulut(fotoId, yol) {
-    try {
-      if (yol) await depoAlan.ref(yol).delete();
-    } catch (e) {
-      /* yoksay */
-    }
+  async function fotoSilBulut(fotoId) {
     await db.collection("fotograflar").doc(fotoId).delete();
   }
 
-  function fotoSilArkaPlan(fotoId, yol) {
-    mezarEkle("fotograflar", fotoId, yol);
+  function fotoSilArkaPlan(fotoId) {
+    mezarEkle("fotograflar", fotoId);
     if (!acik() || !girisVar()) return;
-    fotoSilBulut(fotoId, yol)
+    fotoSilBulut(fotoId)
       .then(() => {
         const m = mezarOku();
         m.fotograflar = m.fotograflar.filter((x) => x.id !== fotoId);
@@ -320,22 +295,6 @@
     if (denemeId) sorgu = sorgu.where("denemeId", "==", denemeId);
     const snap = await sorgu.get();
     return snap.docs.map((x) => x.data());
-  }
-
-  async function indirmeUrl(yol) {
-    return depoAlan.ref(yol).getDownloadURL();
-  }
-
-  async function baytIndir(yol) {
-    const url = await indirmeUrl(yol);
-    const yanit = await fetch(url);
-    const blob = await yanit.blob();
-    return new Promise((coz, reddet) => {
-      const okur = new FileReader();
-      okur.onload = () => coz(okur.result);
-      okur.onerror = () => reddet(new Error("Fotoğraf okunamadı"));
-      okur.readAsDataURL(blob);
-    });
   }
 
   /* ------------------------------------------------------------ eşitleme */
@@ -357,7 +316,7 @@
     }
     for (const s of mezar.fotograflar) {
       try {
-        await fotoSilBulut(s.id, s.yol);
+        await fotoSilBulut(s.id);
         ozet.silinen++;
       } catch (e) {
         console.warn("Eşitleme: fotoğraf silinemedi", s.id);
@@ -390,14 +349,13 @@
       }
     }
 
-    // 5) Fotoğraflar: bulutta olup yerelde olmayanı indir
+    // 5) Fotoğraflar: bulutta olup yerelde olmayanı indir (veri belgede)
     const bulutFotoHarita = new Map(bulutFotolar.map((f) => [f.id, f]));
     for (const f of bulutFotolar) {
       const yerelde = await D.fotoGetir(f.id);
-      if (!yerelde && f.yol) {
+      if (!yerelde && f.veri && f.veri.startsWith("data:")) {
         try {
-          const veri = await baytIndir(f.yol);
-          await D.fotoKoy({ id: f.id, denemeId: f.denemeId, ad: f.ad, tur: "image/jpeg", boyut: f.boyut || 0, veri: veri, tarih: f.tarih || Date.now() });
+          await D.fotoKoy({ id: f.id, denemeId: f.denemeId, ad: f.ad, tur: "image/jpeg", boyut: f.boyut || 0, veri: f.veri, tarih: f.tarih || Date.now() });
           ozet.indirilenFoto++;
         } catch (e) {
           console.warn("Fotoğraf indirilemedi:", f.id);
@@ -441,16 +399,12 @@
     let sorgu = db.collection("fotograflar").where("sahip", "==", uid);
     if (denemeId) sorgu = sorgu.where("denemeId", "==", denemeId);
     const snap = await sorgu.get();
-    const liste = [];
-    for (const doc of snap.docs) {
+    // Fotoğraf baytı belgenin "veri" alanında (dataURL); ayrıca url de ata
+    const liste = snap.docs.map((doc) => {
       const v = doc.data();
-      try {
-        v.url = await indirmeUrl(v.yol);
-      } catch (e) {
-        v.url = null;
-      }
-      liste.push(v);
-    }
+      v.url = v.veri && v.veri.startsWith("data:") ? v.veri : null;
+      return v;
+    });
     liste.sort((a, b) => (a.tarih || 0) - (b.tarih || 0));
     return liste;
   }
@@ -475,6 +429,5 @@
     kullanicilariGetir,
     kullaniciDenemeleri,
     kullaniciFotolari,
-    indirmeUrl,
   };
 })(window.LGS);

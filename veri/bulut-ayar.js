@@ -19,15 +19,15 @@
 
 const BULUT_AYAR = {
   // Hesap sistemini açmak için true yap ve firebase bilgilerini doldur.
-  kullan: false,
+  kullan: true,
 
   firebase: {
-    apiKey: "",
-    authDomain: "",
-    projectId: "",
-    storageBucket: "",
-    messagingSenderId: "",
-    appId: "",
+    apiKey: "AIzaSyAp14o6ck8zMMX6_p56nVI8V1h5h0EqlJI",
+    authDomain: "lgs-hesaplama-6e9da.firebaseapp.com",
+    projectId: "lgs-hesaplama-6e9da",
+    storageBucket: "lgs-hesaplama-6e9da.firebasestorage.app",
+    messagingSenderId: "423643381532",
+    appId: "1:423643381532:web:cad8f127405fa9fd2d84d9",
   },
 
   // Bu listedeki e-postalar moderatördür: herkesin deneme karnesini
