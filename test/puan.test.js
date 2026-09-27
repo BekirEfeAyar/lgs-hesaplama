@@ -225,6 +225,25 @@ baslik("=== İSTATİSTİK ===");
   esit("Boş listede son puan", o.sonPuan, null);
 }
 
+/* --------------------------------------------------------------- gerçek vaka */
+
+baslik("=== GERÇEK VAKA (Zehra: resmî sonuç 421) ===");
+{
+  // Gerçek karne: T18/2 İ10/0 D9/1 Y10/0 M14/4 F14/6 → net 70,67
+  // Eski doğrusal model 392,6 veriyordu (29 puan hata).
+  const d = dogruDagit(0);
+  d.turkce = { d: 18, y: 2 };
+  d.inkilap = { d: 10, y: 0 };
+  d.din = { d: 9, y: 1 };
+  d.yabanci = { d: 10, y: 0 };
+  d.matematik = { d: 14, y: 4 };
+  d.fen = { d: 14, y: 6 };
+  const h = P.hesapla({ dersler: d });
+  kontrol("Toplam net 70,67", h.toplamNet, 70.6667, 0.01);
+  kontrol("Puan gerçeğe 1 puandan yakın", h.puan, 421, 1.0);
+  console.log("    hesaplanan: " + h.puan.toFixed(2) + " | gerçek: 421");
+}
+
 /* --------------------------------------------------------------- yorum */
 
 baslik("=== YORUM METNİ ===");
