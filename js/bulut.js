@@ -91,6 +91,13 @@
         // eslint-disable-next-line no-undef
         db = firebase.firestore();
         baslatildi = true;
+        // İnternet gelince bekleyen işleri sessizce eşitle
+        if (typeof window !== "undefined" && window.addEventListener) {
+          window.addEventListener("online", () => {
+            if (girisVar()) esitle().catch(() => {});
+          });
+        }
+        let ilkOlay = true;
         auth.onAuthStateChanged(async (k) => {
           suAnki = k ? { uid: k.uid, eposta: k.email || "", ad: k.displayName || "" } : null;
           if (suAnki) {
@@ -99,7 +106,11 @@
             } catch (e) {
               console.warn("Profil yazılamadı:", e);
             }
+            // Uygulama açılışında kalan oturum varsa sessizce eşitle.
+            // (Kayıt/giriş zaten açıkça eşitler; kilit sayesinde çakışmaz.)
+            if (ilkOlay) esitle().catch(() => {});
           }
+          ilkOlay = false;
           if (LGS.uygulama) LGS.uygulama.ciz();
         });
         return true;
@@ -320,7 +331,18 @@
 
   /* ------------------------------------------------------------ eşitleme */
 
-  async function esitle() {
+  // Aynı anda tek eşitleme çalışır; çakışan çağrılar aynı söze bağlanır.
+  let esitleSoz = null;
+
+  function esitle() {
+    if (esitleSoz) return esitleSoz;
+    esitleSoz = esitleGovde().finally(() => {
+      esitleSoz = null;
+    });
+    return esitleSoz;
+  }
+
+  async function esitleGovde() {
     if (!acik() || !girisVar()) return { yapildi: false, neden: "giris-yok" };
     const D = LGS.depo;
     const ozet = { yuklenenDeneme: 0, indirilenDeneme: 0, yuklenenFoto: 0, indirilenFoto: 0, silinen: 0 };
@@ -444,8 +466,12 @@
     adGuncelle,
     esitle,
     birlestirDeneme,
+    denemeYukle,
+    denemeSilBulut,
     denemeYukleArkaPlan,
     denemeSilArkaPlan,
+    fotoYukle,
+    fotoSilBulut,
     fotoYukleArkaPlan,
     fotoSilArkaPlan,
     kullanicilariGetir,

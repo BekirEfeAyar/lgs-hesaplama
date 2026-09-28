@@ -7,6 +7,12 @@
 
   const { el, $, kacis, bildir, pencere, puanBicim, netBicim, tarihBicim, puanSinif, turAd } = LGS.arayuz;
   const D = LGS.depo;
+  const B = () => LGS.bulut;
+
+  /** Giriş varsa true (bulut yazılabilir). */
+  function bulutta() {
+    return !!(B() && B().girisVar());
+  }
 
   /* ---------------------------------------------------------------- liste */
 
@@ -168,7 +174,17 @@
       "Evet, sil",
       () => {
         D.denemeSil(d.id);
-        bildir("Deneme silindi");
+        if (bulutta()) {
+          B().denemeSilBulut(d.id).then(
+            () => bildir("Deneme silindi ☁️"),
+            () => {
+              B().denemeSilArkaPlan(d.id);
+              bildir("Deneme silindi (cihazda; bulut hatası — otomatik denenecek)");
+            }
+          );
+        } else {
+          bildir("Deneme silindi");
+        }
         LGS.uygulama.ciz();
       }
     );
@@ -321,11 +337,20 @@
         {
           metin: "Kaydet",
           tur: "birincil",
-          onTikla: () => {
+          onTikla: async () => {
             const veri = veriyiTopla();
             if (!veri.ad.trim()) veri.ad = "İsimsiz deneme";
             D.denemeKaydet(veri);
-            bildir("Deneme kaydedildi");
+            if (bulutta()) {
+              try {
+                await B().denemeYukle(veri);
+                bildir("Deneme kaydedildi ☁️");
+              } catch (e) {
+                bildir("Deneme cihaza kaydedildi; bulut hatası — otomatik tekrar denenecek", "hata");
+              }
+            } else {
+              bildir("Deneme kaydedildi");
+            }
             LGS.uygulama.ciz();
           },
         },
@@ -358,29 +383,35 @@
       girdi.disabled = true;
       bildir(dosyalar.length + " fotoğraf işleniyor…");
       let bitti = 0;
+      let bulutHata = false;
+      const bitir = () => {
+        girdi.disabled = false;
+        if (bulutta() && bulutHata) bildir("Fotoğraflar eklendi (cihaza; bulut hatası — otomatik denenecek)", "hata");
+        else if (bulutta()) bildir("Fotoğraflar eklendi ☁️");
+        else bildir("Fotoğraflar eklendi");
+        LGS.uygulama.ciz();
+        fotograflariAc(denemeId);
+      };
       dosyalar.forEach((dosya) => {
         D.resmiKucult(dosya)
           .then((kucuk) =>
             D.fotoEkle(denemeId, { ad: dosya.name.replace(/\.[^.]+$/, "") || "Yanlışlar", veri: kucuk.veri, tur: kucuk.tur, boyut: kucuk.boyut })
           )
+          .then((tam) => {
+            if (!bulutta()) return;
+            return B().fotoYukle(denemeId, tam).catch(() => {
+              bulutHata = true;
+            });
+          })
           .then(() => {
             bitti++;
-            if (bitti === dosyalar.length) {
-              girdi.disabled = false;
-              bildir("Fotoğraflar eklendi");
-              LGS.uygulama.ciz();
-              fotograflariAc(denemeId);
-            }
+            if (bitti === dosyalar.length) bitir();
           })
           .catch((e) => {
             console.error(e);
             bitti++;
             bildir("Fotoğraf eklenemedi: " + dosya.name, "hata");
-            if (bitti === dosyalar.length) {
-              girdi.disabled = false;
-              LGS.uygulama.ciz();
-              fotograflariAc(denemeId);
-            }
+            if (bitti === dosyalar.length) bitir();
           });
       });
     });
@@ -431,7 +462,17 @@
                 LGS.arayuz.onayla("Fotoğrafı sil", '"' + f.ad + '" silinecek.', "Sil", () => {
                   D.fotoSil(f.id).then(() => {
                     kart.remove();
-                    bildir("Fotoğraf silindi");
+                    if (bulutta()) {
+                      B().fotoSilBulut(f.id).then(
+                        () => bildir("Fotoğraf silindi ☁️"),
+                        () => {
+                          B().fotoSilArkaPlan(f.id);
+                          bildir("Fotoğraf silindi (cihazda; bulut hatası — otomatik denenecek)");
+                        }
+                      );
+                    } else {
+                      bildir("Fotoğraf silindi");
+                    }
                   });
                 });
               },

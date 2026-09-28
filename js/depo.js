@@ -87,16 +87,13 @@
       liste[i] = deneme;
     }
     liste.sort((a, b) => (a.tarih < b.tarih ? 1 : a.tarih > b.tarih ? -1 : b.olusturma - a.olusturma));
-    const ok = denemeleriYaz(liste);
-    if (ok && LGS.bulut) LGS.bulut.denemeYukleArkaPlan(deneme);
-    return ok;
+    return denemeleriYaz(liste);
   }
 
   function denemeSil(id) {
     const liste = denemeleriGetir().filter((d) => d.id !== id);
     denemeleriYaz(liste);
-    if (LGS.bulut) LGS.bulut.denemeSilArkaPlan(id);
-    // Fotoğrafları da temizle
+    // Fotoğrafları da temizle (bulut silme işini çağıran arayüz yapar)
     return fotoSilDeneme(id);
   }
 
@@ -153,10 +150,7 @@
       veri: kayit.veri,
       tarih: kayit.tarih || Date.now(),
     };
-    return tx("readwrite", (depo) => depo.add(tam)).then(() => {
-      if (LGS.bulut) LGS.bulut.fotoYukleArkaPlan(denemeId, tam);
-      return tam;
-    });
+    return tx("readwrite", (depo) => depo.add(tam)).then(() => tam);
   }
 
   /** Fotoğrafı id'siyle getirir (yoksa null). */
@@ -186,9 +180,7 @@
   }
 
   function fotoSil(id) {
-    return tx("readwrite", (depo) => depo.delete(id)).then(() => {
-      if (LGS.bulut) LGS.bulut.fotoSilArkaPlan(id);
-    });
+    return tx("readwrite", (depo) => depo.delete(id));
   }
 
   function fotoSilDeneme(denemeId) {
