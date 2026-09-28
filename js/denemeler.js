@@ -17,7 +17,13 @@
     kap.appendChild(istatistikKartlari(ozet));
     kap.appendChild(seriGrafigi(ozet));
 
-    const baslik = el("div", { class: "bolum-baslik" }, "Kayıtlı denemeler", el("span", { class: "sayac", text: denemeler.length }));
+    const baslik = el(
+      "div",
+      { class: "bolum-baslik" },
+      "Kayıtlı denemeler",
+      el("span", { class: "sayac", text: denemeler.length }),
+      el("button", { class: "btn kucuk birincil", id: "yeni-deneme-btn", text: "+ Yeni deneme", onClick: () => denemePenceresi(null) })
+    );
     kap.appendChild(baslik);
 
     if (!denemeler.length) {
