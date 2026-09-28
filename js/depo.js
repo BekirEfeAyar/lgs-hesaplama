@@ -381,6 +381,7 @@
     dosyaIndir,
     // deneme
     denemeleriGetir,
+    denemeleriYaz,
     denemeGetir,
     denemeKaydet,
     denemeSil,
