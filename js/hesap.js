@@ -164,6 +164,9 @@
 
   function hataCevir(err) {
     const kod = (err && err.code) || "";
+    const mesaj = (err && err.message) || "";
+    if (/permission-denied|insufficient permissions|Missing or insufficient/i.test(kod + " " + mesaj))
+      return "Yetki hatası: veritabanı kuralları henüz yüklenmemiş olabilir. Birazdan tekrar dene.";
     if (kod.includes("user-not-found") || kod.includes("wrong-password") || kod.includes("invalid-credential"))
       return "E-posta veya şifre hatalı";
     if (kod.includes("email-already-in-use")) return "Bu e-posta zaten kayıtlı — giriş yap";
@@ -241,7 +244,7 @@
           bildir("Eşitlenemedi", "hata");
         }
       } catch (e) {
-        bildir("Eşitleme hatası: " + (e && e.message), "hata");
+        bildir(hataCevir(e), "hata");
       } finally {
         esitleBtn.disabled = false;
       }
@@ -305,7 +308,7 @@
       },
       () => {
         liste.innerHTML = "";
-        liste.appendChild(el("p", { class: "ipucu", text: "Liste alınamadı. Yetkin olmayabilir." }));
+        liste.appendChild(el("p", { class: "ipucu", text: "Liste alınamadı: veritabanı kuralları henüz yüklenmemiş olabilir. Birazdan tekrar dene." }));
       }
     );
     return kart;
