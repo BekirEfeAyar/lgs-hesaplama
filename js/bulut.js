@@ -92,7 +92,7 @@
         db = firebase.firestore();
         baslatildi = true;
         auth.onAuthStateChanged(async (k) => {
-          suAnki = k ? { uid: k.uid, eposta: k.email || "" } : null;
+          suAnki = k ? { uid: k.uid, eposta: k.email || "", ad: k.displayName || "" } : null;
           if (suAnki) {
             try {
               await profilYaz();
@@ -113,18 +113,28 @@
 
   /* ------------------------------------------------------------ hesap */
 
-  async function kayitOl(eposta, sifre) {
+  async function kayitOl(eposta, sifre, ad) {
     const k = await auth.createUserWithEmailAndPassword(eposta.trim(), sifre);
+    const isim = (ad || "").trim();
+    if (isim) {
+      try {
+        await k.user.updateProfile({ displayName: isim });
+      } catch (e) {
+        console.warn("Görünen ad yazılamadı:", e);
+      }
+    }
+    suAnki = { uid: k.user.uid, eposta: k.user.email || "", ad: isim };
     await profilYaz();
     await esitle();
-    return { uid: k.user.uid, eposta: k.user.email || "" };
+    return { ...suAnki };
   }
 
   async function giris(eposta, sifre) {
     const k = await auth.signInWithEmailAndPassword(eposta.trim(), sifre);
+    suAnki = { uid: k.user.uid, eposta: k.user.email || "", ad: k.user.displayName || "" };
     await profilYaz();
     await esitle();
-    return { uid: k.user.uid, eposta: k.user.email || "" };
+    return { ...suAnki };
   }
 
   async function cikis() {
@@ -138,10 +148,21 @@
 
   async function profilYaz() {
     if (!suAnki) return;
-    await db.collection("kullanicilar").doc(suAnki.uid).set(
-      { eposta: suAnki.eposta, olusturma: Date.now() },
-      { merge: true }
-    );
+    const veri = { eposta: suAnki.eposta, olusturma: Date.now() };
+    // Görünen adı boşsa mevcut kaydı ezme
+    if (suAnki.ad) veri.ad = suAnki.ad;
+    await db.collection("kullanicilar").doc(suAnki.uid).set(veri, { merge: true });
+  }
+
+  /** Görünen hesap ismini günceller (Auth profili + Firestore). */
+  async function adGuncelle(ad) {
+    const isim = (ad || "").trim();
+    if (!isim) throw new Error("İsim boş olamaz");
+    if (isim.length > 40) throw new Error("İsim en fazla 40 karakter olabilir");
+    await auth.currentUser.updateProfile({ displayName: isim });
+    suAnki.ad = isim;
+    await profilYaz();
+    return isim;
   }
 
   /* ------------------------------------------------------------ mezar taşı */
@@ -420,6 +441,7 @@
     giris,
     cikis,
     sifreSifirla,
+    adGuncelle,
     esitle,
     birlestirDeneme,
     denemeYukleArkaPlan,

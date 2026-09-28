@@ -62,15 +62,38 @@
     kart.appendChild(el("div", { class: "kart-bas", text: "Hesabına giriş yap" }));
 
     const form = el("div", { class: "form" });
+    const isim = el("input", { type: "text", id: "h-isim", placeholder: "örn. Zehra", autocomplete: "nickname", maxlength: "40" });
     const eposta = el("input", { type: "email", id: "h-eposta", placeholder: "ornek@mail.com", autocomplete: "email" });
+    const sifreSar = el("div", { class: "sifre-sar" });
     const sifre = el("input", {
       type: "password",
       id: "h-sifre",
       placeholder: "Şifre (en az 6 karakter)",
       autocomplete: "current-password",
     });
+    const goz = el(
+      "button",
+      {
+        type: "button",
+        class: "goz-btn",
+        title: "Şifreyi göster / gizle",
+        "aria-label": "Şifreyi göster veya gizle",
+        "aria-pressed": "false",
+        text: "👁️",
+      }
+    );
+    goz.addEventListener("click", () => {
+      const goster = sifre.type === "password";
+      sifre.type = goster ? "text" : "password";
+      goz.textContent = goster ? "🙈" : "👁️";
+      goz.setAttribute("aria-pressed", String(goster));
+      goz.title = goster ? "Şifreyi gizle" : "Şifreyi göster";
+    });
+    sifreSar.appendChild(sifre);
+    sifreSar.appendChild(goz);
+    form.appendChild(alan("Hesap ismi (kayıtta kullanılır)", isim));
     form.appendChild(alan("E-posta", eposta));
-    form.appendChild(alan("Şifre", sifre));
+    form.appendChild(alan("Şifre", sifreSar));
 
     const dugmeler = el("div", { class: "btn-satir" });
     const girisBtn = el("button", { class: "btn birincil", text: "Giriş yap" });
@@ -82,9 +105,14 @@
     form.appendChild(dugmeler);
     kart.appendChild(form);
 
-    async function isle(fn, basari) {
+    async function isle(fn, basari, isimGerekli) {
       const e = eposta.value.trim();
       const s = sifre.value;
+      const ad = isim.value.trim();
+      if (isimGerekli && !ad) {
+        bildir("Hesap ismini yaz (örn. Zehra)", "hata");
+        return;
+      }
       if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(e)) {
         bildir("Geçerli bir e-posta yaz", "hata");
         return;
@@ -95,7 +123,7 @@
       }
       [girisBtn, kayitBtn, sifreBtn].forEach((b) => (b.disabled = true));
       try {
-        await fn(e, s);
+        await fn(e, s, ad);
         bildir(basari);
       } catch (err) {
         bildir(hataCevir(err), "hata");
@@ -104,9 +132,9 @@
       }
     }
 
-    girisBtn.addEventListener("click", () => isle((e, s) => B().giris(e, s), "Hoş geldin! Verilerin eşitleniyor…"));
+    girisBtn.addEventListener("click", () => isle((e, s) => B().giris(e, s), "Hoş geldin! Verilerin eşitleniyor…", false));
     kayitBtn.addEventListener("click", () =>
-      isle((e, s) => B().kayitOl(e, s), "Hesabın açıldı! Verilerin buluta taşınıyor…")
+      isle((e, s, ad) => B().kayitOl(e, s, ad), "Hesabın açıldı! Verilerin buluta taşınıyor…", true)
     );
     sifreBtn.addEventListener("click", async () => {
       const e = eposta.value.trim();
@@ -157,9 +185,11 @@
     kart.appendChild(el("div", { class: "kart-bas", text: "Hesabım" }));
 
     const satir = el("div", { class: "hesap-satir" });
-    satir.appendChild(el("div", { class: "hesap-avatar", text: (ben.eposta[0] || "?").toLocaleUpperCase("tr") }));
+    const avatarHarf = (ben.ad || ben.eposta || "?").trim()[0] || "?";
+    satir.appendChild(el("div", { class: "hesap-avatar", text: avatarHarf.toLocaleUpperCase("tr") }));
     const bilgi = el("div", { class: "hesap-bilgi" });
-    bilgi.appendChild(el("strong", { text: ben.eposta }));
+    bilgi.appendChild(el("strong", { text: ben.ad || ben.eposta }));
+    if (ben.ad) bilgi.appendChild(el("span", { class: "hesap-eposta", text: ben.eposta }));
     bilgi.appendChild(
       el(
         "span",
@@ -169,6 +199,32 @@
     );
     satir.appendChild(bilgi);
     kart.appendChild(satir);
+
+    // İsim güncelleme
+    const isimSatir = el("div", { class: "isim-satir" });
+    const isimGirdi = el("input", {
+      type: "text",
+      value: ben.ad || "",
+      placeholder: "Hesap ismin (örn. Zehra)",
+      maxlength: "40",
+      "aria-label": "Hesap ismi",
+    });
+    const isimBtn = el("button", { class: "btn kucuk", text: "İsmi kaydet" });
+    isimBtn.addEventListener("click", async () => {
+      isimBtn.disabled = true;
+      try {
+        const yeni = await B().adGuncelle(isimGirdi.value);
+        bildir("İsmin güncellendi: " + yeni);
+        LGS.uygulama.ciz();
+      } catch (e) {
+        bildir(e && e.message ? e.message : "İsim güncellenemedi", "hata");
+      } finally {
+        isimBtn.disabled = false;
+      }
+    });
+    isimSatir.appendChild(isimGirdi);
+    isimSatir.appendChild(isimBtn);
+    kart.appendChild(isimSatir);
 
     const dugmeler = el("div", { class: "btn-satir" });
     const esitleBtn = el("button", { class: "btn birincil", text: "🔄 Şimdi eşitle" });
@@ -232,7 +288,12 @@
           const satir = el(
             "div",
             { class: "yonetim-satir" },
-            el("div", { class: "y-bilgi" }, el("strong", { text: k.eposta || k.uid })),
+            el(
+              "div",
+              { class: "y-bilgi" },
+              el("strong", { text: k.ad || k.eposta || k.uid }),
+              k.ad ? el("span", { text: k.eposta || "" }) : null
+            ),
             el(
               "div",
               { class: "y-eylem" },
