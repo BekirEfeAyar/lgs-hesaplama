@@ -1015,6 +1015,11 @@ textarea {
   color: var(--metin-soluk);
 }
 
+.lise-taban span.dilim {
+  display: block;
+  font-weight: 600;
+}
+
 .lise-taban span.gecmis {
   display: block;
   opacity: 0.85;

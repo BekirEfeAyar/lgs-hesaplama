@@ -108,8 +108,9 @@ Listedeki 3096 program, unsalim.com'un "2025 LGS Taban Puanları, Puan Farkları
 Yerleşme Bilgileri" rehberinden alındı (MEB / e-Okul verilerine dayanır). Her satırda
 kaynak etiketi ("2025") var. 2026 taban puanları yerleştirme sonuçlarıyla belli olur.
 
-Yüzdelik dilim bu kaynakta YOK — o yüzden sitede dilim sütunu boş. Kendi verini
-eklersen dilimi girebilirsin.
+Yüzdelik dilimler tabanpuanlari.net verisidir; her kayıt taban puanıyla birebir
+eşleştirilerek doğrulandı (2602/3096 kayıt, %84). Eşleşmeyen kayıtlarda dilim
+boş görünür. Kendi verini eklersen dilimi girebilirsin.
 
 İl ve ilçe listesi ise **tam ve gerçektir** (81 il / 973 ilçe, turkiyeapi.dev).
 

@@ -36,7 +36,7 @@
         "div",
         { class: "uyari-kutu" },
         el("strong", { text: "2025 taban puanları. " }),
-        "Bu liste 2025 ilk yerleştirme sonuçlarına dayanır (kaynak: unsalim.com rehberi). 2026 puanları henüz açıklanmadı. Yüzdelik dilim bu kaynakta yok. Tercih yaparken MEB'in güncel duyurularını teyit et."
+        "Bu liste 2025 ilk yerleştirme sonuçlarına dayanır (taban: unsalim.com rehberi; yüzdelik dilim: tabanpuanlari.net, taban eşleşmesiyle doğrulandı). 2026 puanları henüz açıklanmadı. Tercih yaparken MEB'in güncel duyurularını teyit et."
       )
     );
     kap.appendChild(filtreler());
@@ -455,7 +455,7 @@
         "div",
         { class: "lise-taban" },
         tabanYok ? el("strong", { class: "yok", text: "—" }) : el("strong", { text: puanBicim(l.taban) }),
-        !tabanYok && l.dilim ? el("span", { text: "%" + String(l.dilim).replace(".", ",") }) : null,
+        !tabanYok && l.dilim ? el("span", { class: "dilim", text: "%" + String(l.dilim).replace(".", ","), title: "2025 yüzdelik dilimi" }) : null,
         !tabanYok && l.taban2024 ? el("span", { class: "gecmis", text: "2024: " + puanBicim(l.taban2024), title: "2024 taban puanı" }) : null
       ),
       tabanYok
