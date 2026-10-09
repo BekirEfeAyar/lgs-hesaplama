@@ -66,6 +66,7 @@
       tarih: bugun(),
       yayin: "",
       dersler: dersler,
+      yanlisKonular: [],
       notlar: "",
       olusturma: Date.now(),
       guncelleme: Date.now(),

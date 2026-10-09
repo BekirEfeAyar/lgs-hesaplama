@@ -22,11 +22,16 @@ Kurulum, sunucu, hesap yönetimi, üyelik — hiçbir şey gerekmiyor. Siteyi a�
 - İki denemeden sonra puan gelişim grafiği
 - Arşiv: her deneme kalıcı olarak saklanır, istediğin zaman açıp düzenlersin
 
-### Yanlış fotoğraf arşivi
-- Denemeye sınırsız fotoğraf ekle (telefondan çektiğin kareler dâhil)
+### Yanlışlarım (her denemede)
+- **Yanlış Yaptığım Sorular:** denemeye sınırsız fotoğraf ekle (telefondan çektiğin kareler dâhil)
+- **Yanlış Yaptığım Konular:** ders → ünite → konu seçerek yanlışlarını işaretle (8. sınıf MEB konu listesi, 6 ders, 207 konu)
 - Görseller otomatik küçültülür (1400 px, JPEG) — yer tasarrufu için
 - Tıkla, büyüt, incele
-- Fotoğraflar **sadece senin cihazında** durur, internete yüklenmez
+
+### Konular (yanlış arşivi)
+- Hangi konuda, hangi denemelerde yanlış yaptığını tek ekranda gör
+- Ders filtresi + konu arama + "sadece yanlış yaptıklarım" anahtarı
+- Her konunun altında deneme çipleri (ad · tarih · puan) — tıkla, denemeyi aç
 
 ### Lise Rehberi
 - **3096 program, 81 il** — 2025 ilk yerleştirme taban puanları
@@ -162,22 +167,28 @@ lgs-hesaplama/
 │   ├── depo.js             localStorage + IndexedDB katmanı
 │   ├── puan.js             Puan hesaplama motoru
 │   ├── arayuz.js           DOM yardımcıları, pencere, bildirim
-│   ├── denemeler.js        Deneme ekranı
+│   ├── denemeler.js        Deneme ekranı + Yanlışlarım (soru/konu sekmeleri)
+│   ├── konular.js          Konular ekranı (yanlış arşivi ağacı)
 │   ├── liseler.js          Lise Rehberi ekranı
 │   ├── veriler.js          Veri yönetimi ekranı
+│   ├── bulut.js            Firebase Auth/Firestore senkronu
+│   ├── hesap.js            Hesap sekmesi + moderatör paneli
 │   └── uygulama.js         Tema, sekmeler, başlatma
 ├── veri/
 │   ├── il-ilce.js          81 il + 973 ilçe (turkiyeapi.dev)
+│   ├── konular.js          8. sınıf MEB konu listesi (6 ders, 207 konu)
 │   └── liseler.js          3096 program: 2025+2024 taban puanları (unsalim.com rehberi)
 ├── test/
-│   └── puan.test.js        Puan motoru testleri (node test/puan.test.js)
+│   ├── puan.test.js        Puan motoru testleri (node test/puan.test.js)
+│   └── konular.test.js     Konu verisi bütünlük testleri (node test/konular.test.js)
 └── README.md
 ```
 
 ## Test
 
 ```bash
-node test/puan.test.js     # 48 test — puan motoru
+node test/puan.test.js     # 52 test — puan motoru
+node test/konular.test.js  # 14 test — konu verisi bütünlüğü
 ```
 
 Tarayıcı testleri (gerçek tıklama, 51 test) depo dışında CDP sürücüsüyle çalıştırılır.
@@ -190,10 +201,12 @@ Tarayıcı testleri (gerçek tıklama, 51 test) depo dışında CDP sürücüsü
 |---|---:|
 | index.html | 3,4 |
 | style.css | 23,0 |
-| js/*.js | 8 dosya, ~68 |
+| js/*.js | 11 dosya, ~130 |
 | veri/il-ilce.js | 23,5 |
+| veri/konular.js | 13,4 |
 | veri/liseler.js | ~750 |
 | test/puan.test.js | 7,8 |
+| test/konular.test.js | 2,5 |
 
 ## Tarayıcı desteği
 

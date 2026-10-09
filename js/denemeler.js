@@ -160,8 +160,8 @@
         "div",
         { class: "deneme-eylem" },
         el("button", { class: "btn kucuk birincil", text: "🎯 Bu puanla liseler", title: "Bu denemenin puanıyla girilebilen liseleri gör", onClick: () => LGS.lise.puanaGit(h.puan, d.ad || "Deneme") }),
-        el("button", { class: "btn kucuk hayalet", text: "Aç", onClick: () => denemePenceresi(d.id) }),
-        el("button", { class: "btn kucuk hayalet", text: "Fotoğraf", onClick: () => fotograflariAc(d.id) }),
+        el("button", { class: "btn kucuk hayalet", text: "Düzenle", onClick: () => denemePenceresi(d.id) }),
+        el("button", { class: "btn kucuk hayalet", text: "Yanlışlarım", onClick: () => yanlislarAc(d.id) }),
         el("button", { class: "btn kucuk hayalet sil", text: "Sil", onClick: () => silOnayla(d) })
       )
     );
@@ -364,11 +364,185 @@
 
   /* ---------------------------------------------------------------- fotoğraflar */
 
-  function fotograflariAc(denemeId) {
+  /* ------------------------------------------------------- yanlışlarım */
+
+  function yanlislarAc(denemeId, baslangic) {
     const deneme = D.denemeGetir(denemeId);
     if (!deneme) return;
 
     const kap = el("div", { class: "foto-bolum" });
+    const sekmeCubugu = el("div", { class: "modal-sekmeler", role: "tablist" });
+    const icerikSorular = el("div", { class: "modal-sekme-icerik" });
+    const icerikKonular = el("div", { class: "modal-sekme-icerik" });
+    kap.appendChild(sekmeCubugu);
+    kap.appendChild(icerikSorular);
+    kap.appendChild(icerikKonular);
+
+    const sekmeler = [
+      { id: "sorular", metin: "📷 Yanlış Yaptığım Sorular", kap: icerikSorular },
+      { id: "konular", metin: "📝 Yanlış Yaptığım Konular", kap: icerikKonular },
+    ];
+    const dugmeler = {};
+    sekmeler.forEach((s) => {
+      const b = el("button", {
+        class: "modal-sekme",
+        role: "tab",
+        text: s.metin,
+        onClick: () => sekmeGoster(s.id),
+      });
+      dugmeler[s.id] = b;
+      sekmeCubugu.appendChild(b);
+    });
+
+    function sekmeGoster(id) {
+      sekmeler.forEach((s) => {
+        const acik = s.id === id;
+        s.kap.hidden = !acik;
+        dugmeler[s.id].classList.toggle("etkin", acik);
+        dugmeler[s.id].setAttribute("aria-selected", acik ? "true" : "false");
+      });
+    }
+
+    sorularSekmesiniCiz(deneme, icerikSorular);
+    konularSekmesiniCiz(denemeId, icerikKonular);
+    sekmeGoster(baslangic === "konular" ? "konular" : "sorular");
+
+    pencere({
+      baslik: (deneme.ad || "Deneme") + " · Yanlışlarım",
+      icerik: kap,
+      eylemler: [{ metin: "Kapat", tur: "hayalet", onTikla: () => LGS.uygulama.ciz() }],
+    });
+  }
+
+  function fotograflariAc(denemeId) {
+    yanlislarAc(denemeId, "sorular");
+  }
+
+  function konulariKaydet(denemeId, liste) {
+    const d = D.denemeGetir(denemeId);
+    if (!d) return false;
+    d.yanlisKonular = liste;
+    D.denemeKaydet(d);
+    if (bulutta()) B().denemeYukle(d).catch(() => {});
+    return true;
+  }
+
+  function konuAnahtari(k) {
+    return k.ders + "|" + k.unite + "|" + k.konu;
+  }
+
+  function dersAdi(dersId) {
+    const d = (LGS.DERSLER || []).find((x) => x.id === dersId);
+    if (!d) return dersId;
+    return dersId === "yabanci" ? "Yabancı Dil (İngilizce)" : d.ad;
+  }
+
+  function konularSekmesiniCiz(denemeId, kap) {
+    const tazeListe = () => (D.denemeGetir(denemeId) || {}).yanlisKonular || [];
+
+    const form = el("div", { class: "konu-form" });
+    const dersSec = el("select", { class: "secim", "aria-label": "Ders" });
+    const uniteSec = el("select", { class: "secim", "aria-label": "Ünite" });
+    const konuSec = el("select", { class: "secim", "aria-label": "Konu" });
+    const ekleBtn = el("button", { class: "btn birincil", text: "+ Ekle" });
+
+    function secDoldur(sec, secenekler, yerTutucu) {
+      sec.innerHTML = "";
+      sec.appendChild(el("option", { value: "", text: yerTutucu }));
+      secenekler.forEach((s) => sec.appendChild(el("option", { value: s, text: s })));
+    }
+
+    function uniteListesi(dersId) {
+      return ((typeof KONULAR !== "undefined" && KONULAR[dersId]) || []).map((u) => u.u);
+    }
+
+    function konuListesi(dersId, unite) {
+      const u = ((typeof KONULAR !== "undefined" && KONULAR[dersId]) || []).find((x) => x.u === unite);
+      return u ? u.k : [];
+    }
+
+    // option value'ları ders id'si olur
+    dersSec.innerHTML = "";
+    dersSec.appendChild(el("option", { value: "", text: "Ders seç" }));
+    (LGS.DERSLER || []).forEach((d) => dersSec.appendChild(el("option", { value: d.id, text: dersAdi(d.id) })));
+
+    dersSec.addEventListener("change", () => {
+      secDoldur(uniteSec, uniteListesi(dersSec.value), "Ünite seç");
+      secDoldur(konuSec, [], "Önce ünite seç");
+    });
+    uniteSec.addEventListener("change", () => {
+      secDoldur(konuSec, konuListesi(dersSec.value, uniteSec.value), "Konu seç");
+    });
+    secDoldur(uniteSec, [], "Önce ders seç");
+    secDoldur(konuSec, [], "Önce ünite seç");
+
+    const listeKap = el("div", { class: "konu-liste" });
+
+    function listeyiCiz() {
+      listeKap.innerHTML = "";
+      const liste = tazeListe();
+      if (!liste.length) {
+        listeKap.appendChild(el("p", { class: "ipucu ortalı", text: "Bu denemede yanlış yapılan konu eklemedin. Yukarıdan ders → ünite → konu seçip Ekle'ye bas." }));
+        return;
+      }
+      liste.forEach((k, i) => {
+        const satir = el(
+          "div",
+          { class: "konu-satir" },
+          el(
+            "div",
+            { class: "konu-bilgi" },
+            el("strong", { text: k.konu }),
+            el("span", { text: dersAdi(k.ders) + " · " + k.unite })
+          ),
+          el("button", {
+            class: "ikon-btn kucuk sil",
+            title: "Konuyu kaldır",
+            html: "&#215;",
+            onClick: () => {
+              const guncel = tazeListe().filter((_, j) => j !== i);
+              konulariKaydet(denemeId, guncel);
+              listeyiCiz();
+              bildir("Konu kaldırıldı");
+            },
+          })
+        );
+        listeKap.appendChild(satir);
+      });
+    }
+
+    ekleBtn.addEventListener("click", () => {
+      const ders = dersSec.value;
+      const unite = uniteSec.value;
+      const konu = konuSec.value;
+      if (!ders || !unite || !konu) {
+        bildir("Önce ders, ünite ve konu seç", "hata");
+        return;
+      }
+      const yeni = { ders: ders, unite: unite, konu: konu };
+      const liste = tazeListe();
+      if (liste.some((k) => konuAnahtari(k) === konuAnahtari(yeni))) {
+        bildir("Bu konu zaten ekli", "hata");
+        return;
+      }
+      liste.push(yeni);
+      konulariKaydet(denemeId, liste);
+      listeyiCiz();
+      bildir("Konu eklendi");
+    });
+
+    form.appendChild(alan("Ders", dersSec));
+    form.appendChild(alan("Ünite", uniteSec));
+    form.appendChild(alan("Konu", konuSec));
+    form.appendChild(ekleBtn);
+    kap.appendChild(form);
+    kap.appendChild(el("p", { class: "ipucu", text: "Eklediğin konular bu denemeye kaydedilir ve Konular sekmesinde hangi denemede yanlış yaptığını gösterir." }));
+    kap.appendChild(listeKap);
+    listeyiCiz();
+  }
+
+  function sorularSekmesiniCiz(deneme, kap) {
+    const denemeId = deneme.id;
 
     const girdi = el("input", {
       type: "file",
@@ -390,7 +564,8 @@
         else if (bulutta()) bildir("Fotoğraflar eklendi ☁️");
         else bildir("Fotoğraflar eklendi");
         LGS.uygulama.ciz();
-        fotograflariAc(denemeId);
+        const g = document.getElementById("galeri");
+        if (g) galeriyiCiz(denemeId, g);
       };
       dosyalar.forEach((dosya) => {
         D.resmiKucult(dosya)
@@ -432,12 +607,11 @@
     const galeri = el("div", { class: "galeri", id: "galeri" });
     kap.appendChild(galeri);
 
-    pencere({
-      baslik: (deneme.ad || "Deneme") + " · Yanlış arşivi",
-      icerik: kap,
-      eylemler: [{ metin: "Kapat", tur: "hayalet", onTikla: () => LGS.uygulama.ciz() }],
-    });
+    galeriyiCiz(denemeId, galeri);
+  }
 
+  function galeriyiCiz(denemeId, galeri) {
+    galeri.innerHTML = "";
     D.fotoListele(denemeId).then((fotolar) => {
       if (!fotolar.length) {
         galeri.appendChild(el("p", { class: "ipucu ortalı", text: "Bu denemeye henüz fotoğraf eklemedin." }));
@@ -484,5 +658,5 @@
     });
   }
 
-  LGS.denemeler = { ciz, denemePenceresi, fotograflariAc, alan };
+  LGS.denemeler = { ciz, denemePenceresi, fotograflariAc, yanlislarAc, alan };
 })(window.LGS);
