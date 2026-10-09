@@ -36,7 +36,7 @@
         "div",
         { class: "uyari-kutu" },
         el("strong", { text: "2025 taban puanları. " }),
-        "Bu liste 2025 ilk yerleştirme sonuçlarına dayanır (taban: unsalim.com rehberi; yüzdelik dilim: tabanpuanlari.net, taban eşleşmesiyle doğrulandı). 2026 puanları henüz açıklanmadı. Tercih yaparken MEB'in güncel duyurularını teyit et."
+        "Bu liste 2025 ilk yerleştirme sonuçlarına dayanır (taban: unsalim.com rehberi; yüzdelik dilim: tabanpuanlari.net + terapotikakademi.com, taban eşleşmesiyle doğrulandı). 2026 puanları henüz açıklanmadı. Tercih yaparken MEB'in güncel duyurularını teyit et."
       )
     );
     kap.appendChild(filtreler());

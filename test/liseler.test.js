@@ -14,8 +14,10 @@ const L = new Function(kod + "\nreturn TABAN_LISELER;")();
 
 dene("3096 kayıt", L.length === 3096, L.length);
 const dolu = L.filter((k) => k.dilim !== null && k.dilim !== undefined);
-dene("dilim dolu ≥ 2500", dolu.length >= 2500, dolu.length);
+dene("dilim dolu ≥ 2700", dolu.length >= 2700, dolu.length);
 dene("dilim hep [0,100] aralığında", dolu.every((k) => typeof k.dilim === "number" && k.dilim >= 0 && k.dilim <= 100));
+dene("dilim=0 yok (eksik null olmalı)", dolu.every((k) => k.dilim !== 0));
+dene("Tokat Yeşilırmak Bilişim boş (hatalı 0 temizlendi)", L.find((k) => k.ad === "Yeşilırmak Ticaret M.T.A.L." && k.alan === "Bilişim Tek.").dilim === null);
 const bul = (ad) => L.find((k) => k.ad === ad);
 dene("Galatasaray %0,01", bul("Galatasaray Üniversitesi Galatasaray L.").dilim === 0.01);
 dene("Kabataş %0,01", L.filter((k) => k.ad === "Kabataş Erkek L.").every((k) => k.dilim === 0.01));
