@@ -58,5 +58,26 @@ const konularKod = fs.readFileSync(path.join(kok, "js/konular.js"), "utf8");
 dene("LGS.konular kaydı var", /LGS\.konular\s*=\s*\{[^}]*ciz/.test(konularKod));
 dene("indeksiKur dışarı açık", /indeksiKur/.test(konularKod));
 
+// Dosya kodlaması: tüm metin dosyaları geçerli UTF-8 olmalı (bozuk bayt = �)
+function metinDosyalari(dir, liste) {
+  for (const ad of fs.readdirSync(dir)) {
+    if (ad === ".git" || ad === "node_modules") continue;
+    const tam = path.join(dir, ad);
+    if (fs.statSync(tam).isDirectory()) metinDosyalari(tam, liste);
+    else if (/\.(js|html|css|md|json)$/.test(ad)) liste.push(tam);
+  }
+  return liste;
+}
+let bozukDosya = [];
+for (const f of metinDosyalari(kok, [])) {
+  const buf = fs.readFileSync(f);
+  try {
+    new TextDecoder("utf-8", { fatal: true }).decode(buf);
+  } catch (e) {
+    bozukDosya.push(path.relative(kok, f));
+  }
+}
+dene("Tüm dosyalar geçerli UTF-8", bozukDosya.length === 0, bozukDosya.join(", "));
+
 console.log(`\nGEÇEN: ${gecen}  KALAN: ${kalan}`);
 process.exit(kalan === 0 ? 0 : 1);

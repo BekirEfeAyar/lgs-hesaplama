@@ -1,39 +1,39 @@
 /* ==========================================================================
-   LGS Deneme Takipçisi — ayarlar ve sabitler
+   LGS Deneme TakipÃ§isi â€” ayarlar ve sabitler
    ========================================================================== */
 
 const LGS = (window.LGS = window.LGS || {});
 
-/** Sürüm: index.html'deki ?v= parametresi ile birlikte artýrýlýr (önbellek için). */
-LGS.SURUM = 15;
+/** SÃ¼rÃ¼m: index.html'deki ?v= parametresi ile birlikte artÄ±rÄ±lÄ±r (Ã¶nbellek iÃ§in). */
+LGS.SURUM = 16;
 
-/** Resmî olmayan uyarý metni — tek yerden yönetilir. */
+/** ResmÃ® olmayan uyarÄ± metni â€” tek yerden yÃ¶netilir. */
 LGS.OTORITE = "MEB";
 
 /**
- * Güncel LGS sýnav yapýsý (MEB Kýlavuzu).
- * 1. Oturum (Sözel, 75 dk): Türkçe 20 + Ýnkýlap 10 + Din 10 + Yabancý Dil 10 = 50 soru
- * 2. Oturum (Sayýsal, 80 dk): Matematik 20 + Fen Bilimleri 20 = 40 soru
+ * GÃ¼ncel LGS sÄ±nav yapÄ±sÄ± (MEB KÄ±lavuzu).
+ * 1. Oturum (SÃ¶zel, 75 dk): TÃ¼rkÃ§e 20 + Ä°nkÄ±lap 10 + Din 10 + YabancÄ± Dil 10 = 50 soru
+ * 2. Oturum (SayÄ±sal, 80 dk): Matematik 20 + Fen Bilimleri 20 = 40 soru
  * Toplam 90 soru
  */
 LGS.DERSLER = [
-  { id: "turkce", ad: "Türkçe", kisa: "Türkçe", soru: 20, oturum: 1 },
-  { id: "inkilap", ad: "T.C. Ýnkýlap Tarihi ve Atatürkçülük", kisa: "Ýnkýlap", soru: 10, oturum: 1 },
-  { id: "din", ad: "Din Kültürü ve Ahlak Bilgisi", kisa: "Din Kült.", soru: 10, oturum: 1 },
-  { id: "yabanci", ad: "Yabancý Dil", kisa: "Yab. Dil", soru: 10, oturum: 1 },
+  { id: "turkce", ad: "TÃ¼rkÃ§e", kisa: "TÃ¼rkÃ§e", soru: 20, oturum: 1 },
+  { id: "inkilap", ad: "T.C. Ä°nkÄ±lap Tarihi ve AtatÃ¼rkÃ§Ã¼lÃ¼k", kisa: "Ä°nkÄ±lap", soru: 10, oturum: 1 },
+  { id: "din", ad: "Din KÃ¼ltÃ¼rÃ¼ ve Ahlak Bilgisi", kisa: "Din KÃ¼lt.", soru: 10, oturum: 1 },
+  { id: "yabanci", ad: "YabancÄ± Dil", kisa: "Yab. Dil", soru: 10, oturum: 1 },
   { id: "matematik", ad: "Matematik", kisa: "Matematik", soru: 20, oturum: 2 },
   { id: "fen", ad: "Fen Bilimleri", kisa: "Fen", soru: 20, oturum: 2 },
 ];
 
-/** Bir yanlýþ, kaç doðruyu götürür? (Net = Doðru - Yanlýþ / 3) */
+/** Bir yanlÄ±ÅŸ, kaÃ§ doÄŸruyu gÃ¶tÃ¼rÃ¼r? (Net = DoÄŸru - YanlÄ±ÅŸ / 3) */
 LGS.YANLIS_ETKI = 3;
 
 /**
- * MEB tarzý puan katsayýlarý (ders neti baþýna puan).
- * Kaynak: 2025 verilerine dayalý yayýnlanmýþ tahmin modelleri
- * (inekle.com, teknofenkoleji.com — iki baðýmsýz kaynakta ayný deðerler).
- * MEB'in gerçek hesabý standart sapmalýdýr; bu katsayýlar o hesabýn
- * doðrusal yaklaþtýrýmýdýr. Full net ? 500 verir.
+ * MEB tarzÄ± puan katsayÄ±larÄ± (ders neti baÅŸÄ±na puan).
+ * Kaynak: 2025 verilerine dayalÄ± yayÄ±nlanmÄ±ÅŸ tahmin modelleri
+ * (inekle.com, teknofenkoleji.com â€” iki baÄŸÄ±msÄ±z kaynakta aynÄ± deÄŸerler).
+ * MEB'in gerÃ§ek hesabÄ± standart sapmalÄ±dÄ±r; bu katsayÄ±lar o hesabÄ±n
+ * doÄŸrusal yaklaÅŸtÄ±rÄ±mÄ±dÄ±r. Full net ? 500 verir.
  */
 LGS.KATSAYI = {
   turkce: 4.348,
@@ -44,24 +44,24 @@ LGS.KATSAYI = {
   yabanci: 1.5075,
 };
 
-/** Puan tabaný (0 netle bile alýnan sabit). */
+/** Puan tabanÄ± (0 netle bile alÄ±nan sabit). */
 LGS.PUAN_TABANI = 194.752082;
 
-/** LGS puan üst sýnýrý. */
+/** LGS puan Ã¼st sÄ±nÄ±rÄ±. */
 LGS.MAX_PUAN = 500;
 
-/** Lise türleri. */
+/** Lise tÃ¼rleri. */
 LGS.LISE_TURLERI = [
   { id: "fen", ad: "Fen Lisesi" },
   { id: "anadolu", ad: "Anadolu Lisesi" },
   { id: "sosyal", ad: "Sosyal Bilimler" },
   { id: "mtal", ad: "MTAL" },
-  { id: "imamhatip", ad: "Ýmam Hatip" },
+  { id: "imamhatip", ad: "Ä°mam Hatip" },
   { id: "proje", ad: "Proje Okulu" },
-  { id: "diger", ad: "Diðer" },
+  { id: "diger", ad: "DiÄŸer" },
 ];
 
-/** Depolama anahtarlarý. */
+/** Depolama anahtarlarÄ±. */
 LGS.ANAHTAR = {
   denemeler: "lgs.denemeler.v1",
   liseler: "lgs.liseler.v1",
@@ -70,41 +70,41 @@ LGS.ANAHTAR = {
   db: "lgs.veritabani.v1",
 };
 
-/** Fotoðraf yüklemede kullanýlacak en büyük kenar (px) ve JPEG kalitesi. */
+/** FotoÄŸraf yÃ¼klemede kullanÄ±lacak en bÃ¼yÃ¼k kenar (px) ve JPEG kalitesi. */
 LGS.FOTOGRAF = { kenar: 1400, kalite: 0.72 };
 
-/** Toplam soru sayýsý. */
+/** Toplam soru sayÄ±sÄ±. */
 LGS.TOPLAM_SORU = LGS.DERSLER.reduce((t, d) => t + d.soru, 0);
 
-/* ---------------------------------------------------------------- il / ilçe */
+/* ---------------------------------------------------------------- il / ilÃ§e */
 
-/** Türkiye'nin 81 ili ve ilçeleri (veri/il-ilce.js). */
+/** TÃ¼rkiye'nin 81 ili ve ilÃ§eleri (veri/il-ilce.js). */
 const IL_ILCE_TUMU = typeof IL_ILCE !== "undefined" ? IL_ILCE : [];
 
-/** Coðrafi bölgeler — sýralý. */
+/** CoÄŸrafi bÃ¶lgeler â€” sÄ±ralÄ±. */
 LGS.BOLGELER = [
   "Marmara",
   "Ege",
   "Akdeniz",
-  "Ýç Anadolu",
+  "Ä°Ã§ Anadolu",
   "Karadeniz",
-  "Güneydoðu Anadolu",
-  "Doðu Anadolu",
+  "GÃ¼neydoÄŸu Anadolu",
+  "DoÄŸu Anadolu",
 ];
 
-/** Ýl adýndan ilçe listesini döndürür. */
+/** Ä°l adÄ±ndan ilÃ§e listesini dÃ¶ndÃ¼rÃ¼r. */
 LGS.ilceler = function (ilAdi) {
   const kayit = IL_ILCE_TUMU.find((x) => x.il === ilAdi);
   return kayit ? kayit.ilceler : [];
 };
 
-/** Ýl adýndan bölge adýný döndürür. */
+/** Ä°l adÄ±ndan bÃ¶lge adÄ±nÄ± dÃ¶ndÃ¼rÃ¼r. */
 LGS.bolge = function (ilAdi) {
   const kayit = IL_ILCE_TUMU.find((x) => x.il === ilAdi);
   return kayit ? kayit.bolge : "";
 };
 
-/** Tüm il adlarý (alfabetik). */
+/** TÃ¼m il adlarÄ± (alfabetik). */
 LGS.iller = function () {
   return IL_ILCE_TUMU.map((x) => x.il).sort((a, b) => a.localeCompare(b, "tr"));
 };
