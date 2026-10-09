@@ -15,7 +15,7 @@
         el(
           "div",
           { class: "bos" },
-          el("div", { class: "bos-ikon", text: "☁️" }),
+          el("div", { class: "bos-ikon", html: '<svg viewBox="0 0 24 24"><path d="M7 18a4 4 0 0 1 0-8 6 6 0 0 1 11.5 1.5A3.5 3.5 0 0 1 17.5 18z"/></svg>' }),
           el("h3", { text: "Hesap sistemi kapalı" }),
           el(
             "p",
@@ -79,13 +79,15 @@
         title: "Şifreyi göster / gizle",
         "aria-label": "Şifreyi göster veya gizle",
         "aria-pressed": "false",
-        text: "👁️",
+        html: '<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>',
       }
     );
     goz.addEventListener("click", () => {
       const goster = sifre.type === "password";
       sifre.type = goster ? "text" : "password";
-      goz.textContent = goster ? "🙈" : "👁️";
+      goz.innerHTML = goster
+        ? '<svg viewBox="0 0 24 24"><path d="M4 4l16 16"/><path d="M9.9 5.9A9.5 9.5 0 0 1 12 5.5c6 0 9.5 6.5 9.5 6.5a17 17 0 0 1-3.3 3.9M6 7.5A16 16 0 0 0 2.5 12S6 18.5 12 18.5c1 0 2-.2 2.8-.5"/></svg>'
+        : '<svg viewBox="0 0 24 24"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
       goz.setAttribute("aria-pressed", String(goster));
       goz.title = goster ? "Şifreyi gizle" : "Şifreyi göster";
     });
@@ -197,7 +199,7 @@
       el(
         "span",
         { class: "hesap-rol " + (B().moderatorMu() ? "mod" : "") },
-        B().moderatorMu() ? "🛡️ Moderatör" : "👤 Öğrenci"
+        B().moderatorMu() ? "Moderatör" : "Öğrenci"
       )
     );
     satir.appendChild(bilgi);
@@ -230,7 +232,7 @@
     kart.appendChild(isimSatir);
 
     const dugmeler = el("div", { class: "btn-satir" });
-    const esitleBtn = el("button", { class: "btn birincil", text: "🔄 Şimdi eşitle" });
+    const esitleBtn = el("button", { class: "btn birincil", html: '<svg class="satir-ikon" viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 3v4h-4"/></svg> Şimdi eşitle' });
     esitleBtn.addEventListener("click", async () => {
       esitleBtn.disabled = true;
       try {
@@ -268,7 +270,7 @@
 
   function moderatorKarti() {
     const kart = el("div", { class: "kart" });
-    kart.appendChild(el("div", { class: "kart-bas", text: "🛡️ Moderatör paneli" }));
+    kart.appendChild(el("div", { class: "kart-bas", text: "Moderatör paneli" }));
     kart.appendChild(
       el("p", { class: "ipucu", text: "Kayıtlı kullanıcıların deneme karnelerini görebilirsin (salt okunur — değiştiremezsin)." })
     );
@@ -361,7 +363,7 @@
         kart.appendChild(tablo);
 
         // Fotoğraflar (salt okunur)
-        const fotoBtn = el("button", { class: "btn kucuk hayalet", text: "📷 Fotoğrafları gör" });
+        const fotoBtn = el("button", { class: "btn kucuk hayalet", html: '<svg class="satir-ikon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8.5 7l1.5-2.5h4L15.5 7"/></svg> Fotoğrafları gör' });
         fotoBtn.addEventListener("click", async () => {
           fotoBtn.disabled = true;
           try {

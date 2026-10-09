@@ -352,7 +352,7 @@
 
   function veriYokEkrani() {
     const kutu = el("div", { class: "bos" });
-    kutu.appendChild(el("div", { class: "bos-ikon", text: "📋" }));
+    kutu.appendChild(el("div", { class: "bos-ikon", html: '<svg viewBox="0 0 24 24"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 4a3 3 0 0 1 6 0"/></svg>' }));
 
     if (durum.arama) {
       kutu.appendChild(el("h3", { text: "Sonuç bulunamadı" }));

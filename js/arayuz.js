@@ -96,7 +96,7 @@
         satir.appendChild(
           el("button", {
             class: "btn " + (e.tur || "hayalet"),
-            text: e.metin,
+            ...(e.html ? { html: e.html } : { text: e.metin }),
             onClick: () => {
               if (!e.onTikla) return pencereKapat();
               const sonuc = e.onTikla();

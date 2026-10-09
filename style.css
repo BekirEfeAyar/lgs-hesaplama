@@ -1679,3 +1679,391 @@ button:disabled {
   background: var(--ana);
   color: #fff;
 }
+
+/* ==========================================================================
+   DEFTER VE KALEM TEMASI (ana tema)
+   brief: "LGS Deneme Takipçisi — Tema Önerisi" (kâğıt defter hissi)
+   Yöntem: değişkenleri yeniden tanımla + aynı seçicilerle düz öğelerle ez.
+   ========================================================================== */
+
+:root {
+  --zemin: #f6f1e7;
+  --yuzey: #fbf8f1;
+  --yuzey-2: #f4eee0;
+  --kenar: #d9d3c4;
+  --metin: #1f2a44;
+  --metin-soluk: #646b7a;
+  --ana: #b8402f;
+  --ana-koyu: #8e3222;
+  --ana-acik: #f5e3d8;
+  --kalem: #b8402f;
+  --iyi: #4f6f52;
+  --uyari: #9a6b12;
+  --hata: #b8402f;
+  --izgara: rgba(120, 110, 85, 0.1);
+  --golge: 0 1px 0 rgba(31, 42, 68, 0.1);
+  --golge-buyuk: 0 2px 0 rgba(31, 42, 68, 0.12);
+  --r: 8px;
+  --r-k: 6px;
+  --yazi: "Source Sans 3", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+  --serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --sekme-y: 999px;
+}
+
+[data-tema="koyu"] {
+  --zemin: #1b1e26;
+  --yuzey: #232630;
+  --yuzey-2: #2a2e39;
+  --kenar: #3b3f4e;
+  --metin: #ece4d2;
+  --metin-soluk: #a39d8c;
+  --ana: #d27355;
+  --ana-koyu: #e08a6b;
+  --ana-acik: #3a2a26;
+  --kalem: #ce5b40;
+  --iyi: #86ac8b;
+  --uyari: #d9a441;
+  --hata: #e0705a;
+  --izgara: rgba(255, 255, 255, 0.04);
+  --golge: 0 1px 0 rgba(0, 0, 0, 0.5);
+  --golge-buyuk: 0 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* kâğıt dokusu: soluk kareli defter deseni */
+body {
+  background-color: var(--zemin);
+  background-image:
+    linear-gradient(var(--izgara) 1px, transparent 1px),
+    linear-gradient(90deg, var(--izgara) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--hata) 25%, transparent);
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+}
+
+/* üst menü: cam efekti yok, defter çizgili düz şerit */
+.ust {
+  background: var(--zemin);
+  backdrop-filter: none;
+  border-bottom: 1px solid var(--kenar);
+  background-image:
+    linear-gradient(var(--izgara) 1px, transparent 1px),
+    linear-gradient(90deg, var(--izgara) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* logo: mühür + kırmızı kalem çizgisi */
+.logo {
+  background: var(--yuzey);
+  color: var(--metin);
+  border: 1.5px solid var(--metin);
+  border-radius: 7px;
+  box-shadow: none;
+  font-family: var(--serif);
+  transform: rotate(-2deg);
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  right: 8px;
+  bottom: 7px;
+  height: 2px;
+  background: var(--kalem);
+  border-radius: 2px;
+  transform: rotate(-1deg);
+}
+
+.ust h1 {
+  font-size: 20px;
+  letter-spacing: 0.2px;
+}
+
+/* sekmeler: hap yok, alt çizgi var */
+.sekme-cubuk {
+  border-bottom: 1px solid var(--kenar);
+}
+
+.sekme {
+  border: none;
+  border-bottom: 2px solid transparent;
+  border-radius: 0;
+  margin-bottom: -1px;
+  padding: 10px 12px;
+}
+
+.sekme.etkin {
+  background: transparent;
+  border-color: transparent;
+  border-bottom-color: var(--kalem);
+  color: var(--metin);
+}
+
+/* hapları düzelt */
+.rozet,
+.lise-etiketler em,
+.lise-durum,
+.hesap-rol,
+.sayac {
+  border-radius: 5px;
+}
+
+.cip {
+  border-radius: 6px;
+}
+
+.cip:hover {
+  color: #fff9ee;
+}
+
+.toast {
+  border-radius: 8px;
+}
+
+.puan-rozet {
+  border-radius: 7px;
+}
+
+.modal {
+  border-radius: 10px;
+  animation: belirme 0.18s ease-out both;
+}
+
+@keyframes belirme {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+@keyframes yuksel {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+}
+
+.modal-alt {
+  border-radius: 0 0 10px 10px;
+}
+
+.ikon-btn {
+  border-radius: 7px;
+}
+
+.modal-x {
+  border-radius: 7px;
+}
+
+.yonetim-satir,
+.konu-satir {
+  border-radius: 7px;
+}
+
+.foto-kart {
+  border-radius: 7px;
+}
+
+.foto-sahne img {
+  border-radius: 7px;
+}
+
+.uyari {
+  border-radius: 6px;
+}
+
+.deneme-not {
+  border-radius: 0 6px 6px 0;
+}
+
+/* butonlar: parlama yok, kırmızı kalem birincil */
+.btn:hover {
+  transform: none;
+}
+
+.btn.birincil {
+  background: var(--kalem);
+  border-color: var(--kalem);
+  color: #fff9ee;
+  box-shadow: none;
+}
+
+[data-tema="koyu"] .btn.birincil {
+  color: #fff6e8;
+}
+
+.bolum-baslik::after {
+  background: var(--kenar);
+}
+
+/* canlı puan: karne notu */
+.canli-ic {
+  background: var(--yuzey);
+}
+
+.canli-puan-sayi {
+  font-family: var(--serif);
+  font-weight: 700;
+  position: relative;
+  padding-bottom: 7px;
+}
+
+.canli-puan-sayi::after {
+  content: "";
+  display: block;
+  height: 2px;
+  width: 82%;
+  margin: 3px 0 0 auto;
+  background: var(--kalem);
+  border-radius: 2px;
+  transform: rotate(-0.8deg);
+}
+
+/* uyarı kutusu: yapışkan not */
+.uyari-kutu {
+  background: #fcf0b8;
+  border: 1px solid #e7d48a;
+  border-radius: 2px 2px 6px 2px;
+  box-shadow: var(--golge);
+  transform: rotate(-0.4deg);
+  position: relative;
+  color: #1f2a44;
+}
+
+.uyari-kutu::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 64px;
+  height: 16px;
+  margin-left: -32px;
+  background: rgba(217, 211, 196, 0.85);
+  border-left: 1px dashed rgba(31, 42, 68, 0.2);
+  border-right: 1px dashed rgba(31, 42, 68, 0.2);
+  transform: rotate(1deg);
+}
+
+[data-tema="koyu"] .uyari-kutu {
+  background: #38311e;
+  border-color: #6e6136;
+  color: var(--metin);
+}
+
+/* satır içi uyarı: kırmızı kalemle daireli ünlem */
+.uyari {
+  display: flex;
+  align-items: center;
+}
+
+.uyari::before {
+  content: "!";
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 18px;
+  height: 18px;
+  margin-right: 7px;
+  border: 1.5px solid var(--hata);
+  border-radius: 50%;
+  color: var(--hata);
+  font-size: 12px;
+  font-weight: 800;
+  transform: rotate(-6deg);
+}
+
+/* yanlış fotoğrafları: hafif eğik kâğıt kartlar, üstüne gelince kırmızı daire */
+.foto-kart {
+  position: relative;
+}
+
+.foto-kart:nth-child(odd) {
+  transform: rotate(-1.1deg);
+}
+
+.foto-kart:nth-child(even) {
+  transform: rotate(1deg);
+}
+
+.foto-kart:hover {
+  transform: rotate(0deg);
+  border-color: var(--ana);
+}
+
+.foto-kart::after {
+  content: "";
+  position: absolute;
+  inset: 6px;
+  border: 2px solid var(--kalem);
+  border-radius: 50%;
+  opacity: 0;
+  transform: rotate(-4deg) scale(0.92);
+  pointer-events: none;
+}
+
+.foto-kart:hover::after {
+  opacity: 0.85;
+}
+
+/* modal perdesi: blur yok */
+.modal-katman {
+  background: rgba(27, 30, 38, 0.5);
+  backdrop-filter: none;
+}
+
+/* seviye renkleri: paletle uyumlu, düz */
+.seviye-ust {
+  color: #3f7a44;
+}
+
+.seviye-yuksek {
+  color: #35707e;
+}
+
+/* hesap avatarı: mürekkep zemin, serif harf */
+.hesap-avatar {
+  background: var(--metin);
+  font-family: var(--serif);
+}
+
+/* satır içi çizgi ikonlar */
+.satir-ikon {
+  width: 1.05em;
+  height: 1.05em;
+  flex: 0 0 auto;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.18em;
+}
+
+.bos-ikon svg {
+  width: 42px;
+  height: 42px;
+  stroke: var(--metin-soluk);
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.goz-btn svg {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}

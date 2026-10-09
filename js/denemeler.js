@@ -37,7 +37,7 @@
         el(
           "div",
           { class: "bos" },
-          el("div", { class: "bos-ikon", text: "📝" }),
+          el("div", { class: "bos-ikon", html: '<svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>' }),
           el("h3", { text: "Henüz deneme kaydın yok" }),
           el("p", { text: "İlk denemeni ekle; doğru ve yanlışlarını gir, puanın otomatik hesaplansın." }),
           el("button", { class: "btn birincil", text: "+ Yeni deneme ekle", onClick: () => denemePenceresi(null) })
@@ -159,7 +159,7 @@
       el(
         "div",
         { class: "deneme-eylem" },
-        el("button", { class: "btn kucuk birincil", text: "🎯 Bu puanla liseler", title: "Bu denemenin puanıyla girilebilen liseleri gör", onClick: () => LGS.lise.puanaGit(h.puan, d.ad || "Deneme") }),
+        el("button", { class: "btn kucuk birincil", html: '<svg class="satir-ikon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg> Bu puanla liseler', title: "Bu denemenin puanıyla girilebilen liseleri gör", onClick: () => LGS.lise.puanaGit(h.puan, d.ad || "Deneme") }),
         el("button", { class: "btn kucuk hayalet", text: "Düzenle", onClick: () => denemePenceresi(d.id) }),
         el("button", { class: "btn kucuk hayalet", text: "Yanlışlarım", onClick: () => yanlislarAc(d.id) }),
         el("button", { class: "btn kucuk hayalet sil", text: "Sil", onClick: () => silOnayla(d) })
@@ -176,7 +176,7 @@
         D.denemeSil(d.id);
         if (bulutta()) {
           B().denemeSilBulut(d.id).then(
-            () => bildir("Deneme silindi ☁️"),
+            () => bildir("Deneme silindi"),
             () => {
               B().denemeSilArkaPlan(d.id);
               bildir("Deneme silindi (cihazda; bulut hatası — otomatik denenecek)");
@@ -278,7 +278,7 @@
         )
       );
       if (h.hatali.length) {
-        canli.appendChild(el("p", { class: "uyari", text: "⚠ " + h.hatali.join(" · ") }));
+        canli.appendChild(el("p", { class: "uyari", text: h.hatali.join(" · ") }));
       }
     }
 
@@ -323,7 +323,7 @@
       eylemler: [
         { metin: "Vazgeç", tur: "hayalet" },
         {
-          metin: "🎯 Liseler",
+          html: '<svg class="satir-ikon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg> Liseler',
           tur: "hayalet",
           onTikla: () => {
             // Kaydetmeden: formdaki güncel değerlerle liselere bak
@@ -344,7 +344,7 @@
             if (bulutta()) {
               try {
                 await B().denemeYukle(veri);
-                bildir("Deneme kaydedildi ☁️");
+                bildir("Deneme kaydedildi");
               } catch (e) {
                 bildir("Deneme cihaza kaydedildi; bulut hatası — otomatik tekrar denenecek", "hata");
               }
@@ -379,15 +379,15 @@
     kap.appendChild(icerikKonular);
 
     const sekmeler = [
-      { id: "sorular", metin: "📷 Yanlış Yaptığım Sorular", kap: icerikSorular },
-      { id: "konular", metin: "📝 Yanlış Yaptığım Konular", kap: icerikKonular },
+      { id: "sorular", metin: '<svg class="satir-ikon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8.5 7l1.5-2.5h4L15.5 7"/></svg> Yanlış Yaptığım Sorular', kap: icerikSorular },
+      { id: "konular", metin: '<svg class="satir-ikon" viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg> Yanlış Yaptığım Konular', kap: icerikKonular },
     ];
     const dugmeler = {};
     sekmeler.forEach((s) => {
       const b = el("button", {
         class: "modal-sekme",
         role: "tab",
-        text: s.metin,
+        html: s.metin,
         onClick: () => sekmeGoster(s.id),
       });
       dugmeler[s.id] = b;
@@ -561,7 +561,7 @@
       const bitir = () => {
         girdi.disabled = false;
         if (bulutta() && bulutHata) bildir("Fotoğraflar eklendi (cihaza; bulut hatası — otomatik denenecek)", "hata");
-        else if (bulutta()) bildir("Fotoğraflar eklendi ☁️");
+        else if (bulutta()) bildir("Fotoğraflar eklendi");
         else bildir("Fotoğraflar eklendi");
         LGS.uygulama.ciz();
         const g = document.getElementById("galeri");
@@ -597,7 +597,7 @@
         "button",
         {
           class: "btn birincil genis",
-          text: "📷 Yanlış fotoğrafı yükle",
+          html: '<svg class="satir-ikon" viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><circle cx="12" cy="13" r="3.5"/><path d="M8.5 7l1.5-2.5h4L15.5 7"/></svg> Yanlış fotoğrafı yükle',
           onClick: () => girdi.click(),
         }
       )
@@ -638,7 +638,7 @@
                     kart.remove();
                     if (bulutta()) {
                       B().fotoSilBulut(f.id).then(
-                        () => bildir("Fotoğraf silindi ☁️"),
+                        () => bildir("Fotoğraf silindi"),
                         () => {
                           B().fotoSilArkaPlan(f.id);
                           bildir("Fotoğraf silindi (cihazda; bulut hatası — otomatik denenecek)");

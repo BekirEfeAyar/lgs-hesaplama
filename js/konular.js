@@ -213,7 +213,7 @@
       const bos = el(
         "div",
         { class: "bos" },
-        el("div", { class: "bos-ikon", text: "📝" }),
+        el("div", { class: "bos-ikon", html: '<svg viewBox="0 0 24 24"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19z"/><path d="M14.5 6.5l3 3"/></svg>' }),
         el("h3", { text: durum.sadeceYanlis ? "Henüz yanlış işaretli konu yok" : "Sonuç bulunamadı" }),
         el("p", {
           text: durum.sadeceYanlis

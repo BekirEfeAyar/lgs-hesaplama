@@ -163,7 +163,7 @@ Hiçbir şey sunucuya gönderilmez. Bu da şu anlama geliyor:
 ```
 lgs-hesaplama/
 ├── index.html              Sayfa iskeleti
-├── style.css               Tasarım (açık + koyu tema)
+├── style.css               Defter ve kalem teması (açık + koyu)
 ├── .nojekyll               GitHub Pages ayarı
 ├── js/
 │   ├── ayarlar.js          Dersler, soru sayıları, il/ilçe yardımcıları

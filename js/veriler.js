@@ -345,7 +345,7 @@
       uyariKutusu.innerHTML = "";
       if (bilinmeyen.length) {
         uyariKutusu.appendChild(
-          el("p", { class: "uyari", text: "⚠ Listede olmayan il adı: " + bilinmeyen.join(", ") })
+          el("p", { class: "uyari", text: "Listede olmayan il adı: " + bilinmeyen.join(", ") })
         );
       }
     }
@@ -491,7 +491,7 @@
     satir.appendChild(
       el("button", {
         class: "btn birincil",
-        text: "⬇ Yedek al (JSON)",
+        html: '<svg class="satir-ikon" viewBox="0 0 24 24"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 20h14"/></svg> Yedek al (JSON)',
         onClick: async () => {
           try {
             const yedek = await D.yedekAl();
@@ -503,11 +503,11 @@
         },
       })
     );
-    satir.appendChild(el("button", { class: "btn hayalet", text: "⬆ Yedekten geri yükle", onClick: () => girdi.click() }));
+    satir.appendChild(el("button", { class: "btn hayalet", html: '<svg class="satir-ikon" viewBox="0 0 24 24"><path d="M12 15V4m0 0L8 8m4-4l4 4M5 20h14"/></svg> Yedekten geri yükle', onClick: () => girdi.click() }));
     satir.appendChild(
       el("button", {
         class: "btn hayalet",
-        text: "📄 Lise listesini içe aktar",
+        html: '<svg class="satir-ikon" viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg> Lise listesini içe aktar',
         onClick: topluIceAktarPenceresi,
       })
     );
