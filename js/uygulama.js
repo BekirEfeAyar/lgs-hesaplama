@@ -9,6 +9,7 @@
   const D = LGS.depo;
 
   const SAYFALAR = {
+    menu: { ad: "Ana Menü", ciz: (k) => LGS.menu.ciz(k) },
     denemeler: { ad: "Denemeler", ciz: (k) => LGS.denemeler.ciz(k) },
     konular: { ad: "Konular", ciz: (k) => LGS.konular.ciz(k) },
     lise: { ad: "Lise Rehberi", ciz: (k) => LGS.lise.ciz(k) },
@@ -116,7 +117,8 @@
     D.liseleriGetir();
 
     const baslangic = location.hash.slice(1);
-    sayfayaGit(SAYFALAR[baslangic] ? baslangic : "denemeler", true);
+    // Adres çubuğunda sayfa yoksa açılışta ana menü göster
+    sayfayaGit(SAYFALAR[baslangic] ? baslangic : "menu", true);
 
     // Tarayıcı geri/ileri düğmeleri
     window.addEventListener("popstate", () => {

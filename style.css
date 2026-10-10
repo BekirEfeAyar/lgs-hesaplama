@@ -2151,3 +2151,106 @@ h3 {
 .lise-ad strong a:hover::after {
   color: var(--ana);
 }
+
+/* ---------------------------------------------------------------- ana menü */
+
+.menu-karsilama {
+  text-align: center;
+  padding: 26px 18px;
+}
+
+.menu-ust {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--metin-soluk);
+}
+
+.menu-karsilama h2 {
+  font-size: 26px;
+  margin: 0 0 8px;
+}
+
+.menu-alt {
+  margin: 0;
+  font-size: 14px;
+  color: var(--metin-soluk);
+}
+
+.menu-izgara {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.menu-kart {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  transition: 0.16s ease;
+}
+
+.menu-kart:hover {
+  border-color: var(--ana);
+}
+
+.menu-ikon {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--kenar);
+  border-radius: 7px;
+  background: var(--yuzey-2);
+  color: var(--metin);
+}
+
+.menu-ikon svg {
+  width: 22px;
+  height: 22px;
+  fill: currentColor;
+}
+
+.menu-kart:hover .menu-ikon {
+  color: var(--ana);
+  border-color: var(--ana);
+}
+
+.menu-metin {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.menu-metin strong {
+  font-family: var(--serif);
+  font-size: 17px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.menu-aciklama {
+  font-size: 13px;
+  color: var(--metin-soluk);
+  line-height: 1.45;
+}
+
+.menu-ok {
+  flex: 0 0 auto;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--metin-soluk);
+}
+
+.menu-kart:hover .menu-ok {
+  color: var(--ana);
+}
