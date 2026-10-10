@@ -21,7 +21,7 @@
       rel="icon"
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='4' y='4' width='56' height='56' rx='10' fill='%23FBF8F1' stroke='%23B8402F' stroke-width='4'/%3E%3Ctext x='32' y='44' font-family='Georgia,serif' font-size='30' font-weight='bold' fill='%231F2A44' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E"
     />
-    <link rel="stylesheet" href="style.css?v=19" />
+    <link rel="stylesheet" href="style.css?v=20" />
   </head>
 
   <body>
@@ -39,8 +39,8 @@
       </button>
     </header>
 
-    <!-- ===== Sekmeler ===== -->
-    <nav class="sekme-cubuk" role="tablist">
+    <!-- ===== Ana menü ===== -->
+    <nav class="sekme-cubuk" role="tablist" aria-label="Ana menü">
       <button class="sekme etkin" data-sayfa="denemeler" role="tab">
         <svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v14H5zm10 1.5V8h3.5z" /></svg>
         Denemeler
@@ -66,31 +66,58 @@
     <main id="icerik"></main>
 
     <footer class="alt">
+      <div class="alt-bolumler">
+        <div class="alt-bolum">
+          <h2>Menü</h2>
+          <nav aria-label="Alt menü">
+            <button class="alt-bag" data-sayfa="denemeler">Denemeler</button>
+            <button class="alt-bag" data-sayfa="konular">Konular</button>
+            <button class="alt-bag" data-sayfa="lise">Lise Rehberi</button>
+            <button class="alt-bag" data-sayfa="veriler">Veriler</button>
+            <button class="alt-bag" data-sayfa="hesap">Hesap</button>
+          </nav>
+        </div>
+        <div class="alt-bolum">
+          <h2>Kaynaklar</h2>
+          <nav aria-label="Dış kaynaklar">
+            <a href="https://www.meb.gov.tr" target="_blank" rel="noopener">Millî Eğitim Bakanlığı</a>
+            <a href="https://e-okul.meb.gov.tr" target="_blank" rel="noopener">e-Okul</a>
+            <a href="https://unsalim.com" target="_blank" rel="noopener">unsalim.com (taban puan rehberi)</a>
+            <a href="https://tabanpuanlari.net/lgs" target="_blank" rel="noopener">tabanpuanlari.net</a>
+            <a href="https://terapotikakademi.com/lisetabanpuanlari" target="_blank" rel="noopener">Terapötik Akademi</a>
+          </nav>
+        </div>
+        <div class="alt-bolum">
+          <h2>Bu site</h2>
+          <p>LGS denemelerini kaydet, yanlışlarını arşivle, puanını hesapla ve lise taban puanlarıyla karşılaştır.</p>
+          <p class="alt-kucuk">Sürüm <span id="surum-no"></span> · Veriler yalnızca bu tarayıcıda saklanır.</p>
+        </div>
+      </div>
       <p>
         <strong>Uyarı:</strong> Bu sitede hesaplanan puan <em>tahminidir</em>, resmî LGS puanı değildir. Resmî puan
         sınav ortalama ve standart sapma verileriyle MEB tarafından hesaplanır. Lise taban puanları da her yıl
         değişir — güncel veriyi resmî kaynaklardan teyit et.
       </p>
-      <p class="alt-kucuk">Veriler yalnızca bu tarayıcıda saklanır. Cihaz değiştirirsen Veriler sekmesinden yedek al.</p>
+      <p class="alt-kucuk">© 2026 LGS Deneme Takipçisi · Cihaz değiştirirsen Veriler sekmesinden yedek al.</p>
     </footer>
 
     <div class="toast" id="toast" role="status" aria-live="polite"></div>
     <div class="modal-katman" id="modal" hidden></div>
 
-    <script src="veri/il-ilce.js?v=19"></script>
-    <script src="js/ayarlar.js?v=19"></script>
-    <script src="veri/liseler.js?v=19"></script>
-    <script src="veri/bulut-ayar.js?v=19"></script>
-    <script src="js/depo.js?v=19"></script>
-    <script src="js/puan.js?v=19"></script>
-    <script src="js/arayuz.js?v=19"></script>
-    <script src="js/bulut.js?v=19"></script>
-    <script src="veri/konular.js?v=19"></script>
-    <script src="js/denemeler.js?v=19"></script>
-    <script src="js/liseler.js?v=19"></script>
-    <script src="js/veriler.js?v=19"></script>
-    <script src="js/hesap.js?v=19"></script>
-    <script src="js/konular.js?v=19"></script>
-    <script src="js/uygulama.js?v=19"></script>
+    <script src="veri/il-ilce.js?v=20"></script>
+    <script src="js/ayarlar.js?v=20"></script>
+    <script src="veri/liseler.js?v=20"></script>
+    <script src="veri/bulut-ayar.js?v=20"></script>
+    <script src="js/depo.js?v=20"></script>
+    <script src="js/puan.js?v=20"></script>
+    <script src="js/arayuz.js?v=20"></script>
+    <script src="js/bulut.js?v=20"></script>
+    <script src="veri/konular.js?v=20"></script>
+    <script src="js/denemeler.js?v=20"></script>
+    <script src="js/liseler.js?v=20"></script>
+    <script src="js/veriler.js?v=20"></script>
+    <script src="js/hesap.js?v=20"></script>
+    <script src="js/konular.js?v=20"></script>
+    <script src="js/uygulama.js?v=20"></script>
   </body>
 </html>

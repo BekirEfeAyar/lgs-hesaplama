@@ -430,6 +430,12 @@
     return el("em", { class: "tahmini", text: "örnek veri", title: "Resmî olmayan örnek değer" });
   }
 
+  // Okul adı → resmî site araması (meb.k12.tr). Kayıtlı tekil URL yok,
+  // o yüzden deterministic arama bağlantısı kurulur (tahminî URL yazılmaz).
+  function okulSiteUrl(l) {
+    return "https://www.google.com/search?q=" + encodeURIComponent("site:meb.k12.tr " + l.ad + " " + l.sehir);
+  }
+
   function liseSatiri(l) {
     const tabanYok = l.taban === null || l.taban === undefined;
     const yeter = !tabanYok && durum.puan >= l.taban;
@@ -440,7 +446,7 @@
       el(
         "div",
         { class: "lise-ad" },
-        el("strong", { text: l.ad }),
+        el("strong", {}, el("a", { class: "lise-bag", href: okulSiteUrl(l), target: "_blank", rel: "noopener", title: l.ad + " — web sitesini yeni sekmede aç", text: l.ad })),
         el(
           "span",
           { class: "lise-etiketler" },

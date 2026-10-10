@@ -99,9 +99,13 @@
     const temaBtn = $("#tema-btn");
     if (temaBtn) temaBtn.addEventListener("click", temaDegistir);
 
-    $$(".sekme").forEach((s) => {
+    $$(".sekme, .alt-bag").forEach((s) => {
       s.addEventListener("click", () => sayfayaGit(s.dataset.sayfa));
     });
+
+    // Altbilgi sürüm numarası
+    const surumNo = $("#surum-no");
+    if (surumNo) surumNo.textContent = "v" + LGS.SURUM;
 
     window.addEventListener("hashchange", () => {
       const ad = location.hash.slice(1);

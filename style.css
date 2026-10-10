@@ -2067,3 +2067,87 @@ h3 {
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* ---------------------------------------------------------------- altbilgi */
+
+.alt {
+  border-top: 2px solid var(--kenar);
+  margin-top: 10px;
+  padding-top: 16px;
+}
+
+.alt-bolumler {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.alt-bolum h2 {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+  color: var(--metin-soluk);
+  margin: 0 0 8px;
+}
+
+.alt-bolum nav {
+  display: grid;
+  gap: 5px;
+  justify-items: start;
+}
+
+.alt-bolum p {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.alt-bag {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--metin);
+  cursor: pointer;
+  text-align: left;
+}
+
+.alt-bolum a {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--metin);
+  text-decoration: none;
+}
+
+.alt-bag:hover,
+.alt-bolum a:hover {
+  color: var(--ana);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* lise adı → okul sitesi bağlantısı */
+.lise-ad strong a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.lise-ad strong a:hover {
+  color: var(--ana);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.lise-ad strong a::after {
+  content: "↗";
+  font-size: 11px;
+  color: var(--metin-soluk);
+  margin-left: 4px;
+}
+
+.lise-ad strong a:hover::after {
+  color: var(--ana);
+}
