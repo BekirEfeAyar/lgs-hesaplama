@@ -285,6 +285,7 @@
               kod: lise ? lise.kod || "" : "",
               resmi: document.getElementById("l-resmi").checked,
               kaynak: lise ? lise.kaynak || "" : "",
+              site: lise ? lise.site || "" : "",
               not: document.getElementById("l-not").value,
             };
             if (!kayit.ad) {

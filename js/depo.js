@@ -257,6 +257,7 @@
       kod: l.kod || "",
       resmi: false,
       kaynak: l.kaynak || "",
+      site: l.site || "",
       not: "",
     }));
   }

@@ -25,6 +25,10 @@ dene("taban>400 olanlarda dilim<=20", L.filter((k) => k.taban != null && k.taban
 // taban-dilim monotonluğu kabaca: en yüksek 10 tabanın dilimi <= 1 olmalı
 const sirali = dolu.filter((k) => k.taban != null).sort((a, b) => b.taban - a.taban);
 dene("en yüksek 10 tabanda dilim<=1", sirali.slice(0, 10).every((k) => k.dilim <= 1));
+// site: yalnızca doğrulanmış meb.k12.tr adresleri yazılır
+const siteli = L.filter((k) => k.site !== null && k.site !== undefined);
+dene("site hep https://*.meb.k12.tr/", siteli.every((k) => /^https:\/\/[a-z0-9-]+\.meb\.k12\.tr\/$/.test(k.site)));
+console.log(`  (bilgi: site dolu ${siteli.length}/${L.length})`);
 
 console.log(`\nGEÇEN: ${gecen}  KALAN: ${kalan}`);
 process.exit(kalan === 0 ? 0 : 1);

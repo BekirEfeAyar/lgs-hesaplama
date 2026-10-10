@@ -430,9 +430,11 @@
     return el("em", { class: "tahmini", text: "örnek veri", title: "Resmî olmayan örnek değer" });
   }
 
-  // Okul adı → resmî site araması (meb.k12.tr). Kayıtlı tekil URL yok,
-  // o yüzden deterministic arama bağlantısı kurulur (tahminî URL yazılmaz).
+  // Okul adı → doğrulanmış resmî site varsa direkt açılır; yoksa
+  // meb.k12.tr aramasına düşer (tahminî URL yazılmaz, doğrulanmamış
+  // site alanına eklenmez).
   function okulSiteUrl(l) {
+    if (l.site) return l.site;
     return "https://www.google.com/search?q=" + encodeURIComponent("site:meb.k12.tr " + l.ad + " " + l.sehir);
   }
 
@@ -446,7 +448,7 @@
       el(
         "div",
         { class: "lise-ad" },
-        el("strong", {}, el("a", { class: "lise-bag", href: okulSiteUrl(l), target: "_blank", rel: "noopener", title: l.ad + " — web sitesini yeni sekmede aç", text: l.ad })),
+        el("strong", {}, el("a", { class: "lise-bag" + (l.site ? "" : " arama"), href: okulSiteUrl(l), target: "_blank", rel: "noopener", title: l.ad + (l.site ? " — web sitesini yeni sekmede aç" : " — web'de ara (doğrulanmış site yok)"), text: l.ad })),
         el(
           "span",
           { class: "lise-etiketler" },
