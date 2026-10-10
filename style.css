@@ -2181,14 +2181,15 @@ h3 {
 
 .menu-izgara {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 12px;
 }
 
 .menu-kart {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
   text-align: left;
   font: inherit;
   color: inherit;
@@ -2200,8 +2201,13 @@ h3 {
   border-color: var(--ana);
 }
 
+.menu-ust-satir {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .menu-ikon {
-  flex: 0 0 auto;
   width: 44px;
   height: 44px;
   display: grid;
@@ -2223,29 +2229,30 @@ h3 {
   border-color: var(--ana);
 }
 
-.menu-metin {
-  flex: 1 1 auto;
-  min-width: 0;
-  display: grid;
-  gap: 3px;
-}
-
-.menu-metin strong {
+.menu-baslik {
   font-family: var(--serif);
-  font-size: 17px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
+  font-size: 18px;
+  line-height: 1.25;
 }
 
 .menu-aciklama {
+  flex: 1 1 auto;
   font-size: 13px;
   color: var(--metin-soluk);
   line-height: 1.45;
 }
 
+.menu-rozet {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--ana);
+  border-top: 1px solid var(--kenar);
+  padding-top: 8px;
+}
+
 .menu-ok {
-  flex: 0 0 auto;
   font-size: 18px;
   font-weight: 700;
   color: var(--metin-soluk);
@@ -2253,4 +2260,20 @@ h3 {
 
 .menu-kart:hover .menu-ok {
   color: var(--ana);
+}
+
+@media (max-width: 1020px) {
+  .menu-izgara {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .menu-izgara {
+    grid-template-columns: 1fr;
+  }
+
+  .menu-karsilama h2 {
+    font-size: 22px;
+  }
 }

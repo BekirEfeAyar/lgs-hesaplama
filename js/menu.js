@@ -57,14 +57,15 @@
           el(
             "button",
             { class: "kart menu-kart", onClick: () => LGS.uygulama.sayfayaGit(k.sayfa) },
-            el("span", { class: "menu-ikon", html: IKON[k.sayfa] }),
             el(
               "span",
-              { class: "menu-metin" },
-              el("strong", {}, el("span", { text: k.baslik }), k.rozet ? el("span", { class: "sayac", text: k.rozet }) : null),
-              el("span", { class: "menu-aciklama", text: k.aciklama })
+              { class: "menu-ust-satir" },
+              el("span", { class: "menu-ikon", html: IKON[k.sayfa] }),
+              el("span", { class: "menu-ok", text: "→", "aria-hidden": "true" })
             ),
-            el("span", { class: "menu-ok", text: "→", "aria-hidden": "true" })
+            el("strong", { class: "menu-baslik", text: k.baslik }),
+            el("span", { class: "menu-aciklama", text: k.aciklama }),
+            k.rozet ? el("span", { class: "menu-rozet", text: k.rozet }) : null
           )
         )
       )
