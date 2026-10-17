@@ -227,9 +227,9 @@ baslik("=== İSTATİSTİK ===");
 
 /* --------------------------------------------------------------- gerçek vaka */
 
-baslik("=== GERÇEK VAKA (Zehra: resmî sonuç 421) ===");
+baslik("=== GERÇEK VAKA (Zehra, 2026 LGS: resmî sonuç 421) ===");
 {
-  // Gerçek karne: T18/2 İ10/0 D9/1 Y10/0 M14/4 F14/6 → net 70,67
+  // Gerçek karne (2026 LGS): T18/2 İ10/0 D9/1 Y10/0 M14/4 F14/6 → net 70,67
   // Eski doğrusal model 392,6 veriyordu (29 puan hata).
   const d = dogruDagit(0);
   d.turkce = { d: 18, y: 2 };
