@@ -27,9 +27,14 @@
   let gosterilen = 100;
   const SAYFA_BOYUTU = 100;
 
+  /** Hedef puanı tek ondalığa yuvarlar (kayan nokta artıklarını gizler). */
+  function puanYuvarla(p) {
+    return Math.round((Number(p) || 0) * 10) / 10;
+  }
+
   function ciz(kap) {
     const ayarlar = D.ayarlarGetir();
-    if (!durum.puan) durum.puan = ayarlar.hedefPuan || 350;
+    if (!durum.puan) durum.puan = puanYuvarla(ayarlar.hedefPuan || 350);
     kap.appendChild(puanKutusu());
     kap.appendChild(
       el(
@@ -63,7 +68,7 @@
     });
 
     sayi.addEventListener("input", () => {
-      durum.puan = Math.max(0, Math.min(LGS.MAX_PUAN, Number(sayi.value) || 0));
+      durum.puan = puanYuvarla(Math.max(0, Math.min(LGS.MAX_PUAN, Number(sayi.value) || 0)));
       goster();
     });
     kaydirici.addEventListener("input", () => {
@@ -87,9 +92,10 @@
           class: "btn kucuk" + (Math.round(h.puan) === Math.round(durum.puan) ? " birincil" : " hayalet"),
           text: h.etiket + " (" + puanBicim(h.puan) + ")",
           onClick: () => {
-            durum.puan = h.puan;
-            sayi.value = h.puan;
-            kaydirici.value = Math.round(h.puan);
+            const p = puanYuvarla(h.puan);
+            durum.puan = p;
+            sayi.value = p;
+            kaydirici.value = Math.round(p);
             goster();
           },
         })
@@ -257,7 +263,7 @@
    * Sayfalama sıfırlanır, kullanıcıya hangi puana bakıldığı söylenir.
    */
   function puanaGit(puan, etiket) {
-    durum.puan = Math.max(0, Math.min(LGS.MAX_PUAN, Number(puan) || 0));
+    durum.puan = puanYuvarla(Math.max(0, Math.min(LGS.MAX_PUAN, Number(puan) || 0)));
     gosterilen = SAYFA_BOYUTU;
     LGS.uygulama.sayfayaGit("lise");
     bildir((etiket || "Deneme") + " puanı (" + puanBicim(durum.puan) + ") ile girilebilen liseler");

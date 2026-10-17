@@ -5,7 +5,7 @@
 const LGS = (window.LGS = window.LGS || {});
 
 /** Sürüm: index.html'deki ?v= parametresi ile birlikte artırılır (önbellek için). */
-LGS.SURUM = 24;
+LGS.SURUM = 25;
 
 /** Resmî olmayan uyarı metni — tek yerden yönetilir. */
 LGS.OTORITE = "MEB";
@@ -30,10 +30,11 @@ LGS.YANLIS_ETKI = 3;
 
 /**
  * MEB tarzı puan katsayıları (ders neti başına puan).
- * Kaynak: 2025 verilerine dayalı yayınlanmış tahmin modelleri
- * (inekle.com, teknofenkoleji.com — iki bağımsız kaynakta aynı değerler).
+ * Kaynak: inekle.com'da yayınlanan doğrusal tahmin modeli (aynı katsayı
+ * seti başka kaynaklarda "2023 LGS" tablosu olarak da geçiyor; MEB'in
+ * resmî katsayıları değildir).
  * MEB'in gerçek hesabı standart sapmalıdır; bu katsayılar o hesabın
- * doğrusal yaklaştırımıdır. Full net ? 500 verir.
+ * doğrusal yaklaştırımıdır. Full net ≈ 500 verir.
  */
 LGS.KATSAYI = {
   turkce: 4.348,

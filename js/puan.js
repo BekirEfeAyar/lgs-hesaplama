@@ -7,7 +7,9 @@
 
    Katsayılar: Türkçe 4.348, Matematik 4.2538, Fen 4.123,
                İnkılap 1.666, Din 1.899, Yabancı Dil 1.5075.
-   (2025 verilerine dayalı yayınlanmış tahmin modeli; full net ≈ 500.)
+   (yaygın kullanılan paylaşılmış doğrusal tahmin modeli; full net ≈ 500.
+    Katsayı seti kaynaklarda "2023 LGS tablosu" adıyla da geçer — MEB'in
+    resmî katsayıları değildir.)
 
    Uyarı: Bu, resmî MEB puanı DEĞİLDİR. MEB puanı sınav ortalama ve standart
    sapma verileriyle dönüştürülerek hesaplanır. Buradaki değer deneme

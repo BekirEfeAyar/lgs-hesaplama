@@ -91,11 +91,14 @@
     const taban = Math.max(0, Math.floor(enCok / 20) * 20 - 10);
     const tavan = Math.min(LGS.MAX_PUAN, Math.ceil(enFazla / 20) * 20 + 10);
     const aralik = Math.max(1, tavan - taban);
-    const adim = (veriler.length - 1) * pad;
+    // Noktalar viewBox genişliğine yayılır (pad'lik sol/sağ boşlukla): 24 … 296.
+    // Eski hâlde noktalar pad aralığıyla ilerliyordu: az denemede sola sıkışıyor,
+    // 12'den fazla denemede görünüm alanının dışına taşıp kesiliyordu.
+    const yayilim = (g - pad * 2) / Math.max(1, veriler.length - 1);
 
     let noktalar = "";
     veriler.forEach((s, i) => {
-      const x = pad + i * ((adim) / Math.max(1, veriler.length - 1));
+      const x = pad + i * yayilim;
       const yy = y - ((s.puan - taban) / aralik) * (y - pad * 1.4) - pad * 0.6;
       noktalar += (i ? " L" : "M") + x.toFixed(1) + " " + yy.toFixed(1);
     });
@@ -105,7 +108,7 @@
       '<path d="' + noktalar + '" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>' +
       veriler
         .map((s, i) => {
-          const x = pad + i * (adim / Math.max(1, veriler.length - 1));
+          const x = pad + i * yayilim;
           const yy = y - ((s.puan - taban) / aralik) * (y - pad * 1.4) - pad * 0.6;
           return '<circle cx="' + x.toFixed(1) + '" cy="' + yy.toFixed(1) + '" r="3.5" fill="currentColor"/>';
         })
