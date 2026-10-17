@@ -77,8 +77,8 @@ esit("Ders sayısı", U.DERSLER.length, 6);
 
 baslik("=== PUAN: taban + net × katsayı ===");
 [
-  [90, 499.9731], [72, 425.7591], [63, 387.7365], [45, 324.8996],
-  [36, 309.7661], [18, 273.0161], [0, 194.7521],
+  [90, 500], [72, 429.9805], [63, 389.7728], [45, 321.8948],
+  [36, 306.9704], [18, 270.556], [0, 196.6184],
 ].forEach(([n, b]) => kontrol("net " + String(n).padStart(3), P.hesapla({ dersler: dogruDagit(n) }).puan, b, 0.01));
 
 /* --------------------------------------------------------------- net */
@@ -155,13 +155,13 @@ baslik("=== GEÇERSİZ GİRİŞ KORUMASI ===");
 baslik("=== BOŞ DENEME ===");
 {
   const h = P.hesapla({ dersler: {} });
-  kontrol("Boş denemede taban puan", h.puan, 194.752082, 0.001);
+  kontrol("Boş denemede taban puan", h.puan, 196.618414, 0.001);
   kontrol("Net", h.toplamNet, 0);
   kontrol("D+Y+B = 90", h.toplamD + h.toplamY + h.toplamB, 90);
 }
 {
   const h = P.hesapla(null);
-  kontrol("null deneme çökmez", h.puan, 194.752082, 0.001);
+  kontrol("null deneme çökmez", h.puan, 196.618414, 0.001);
 }
 
 /* --------------------------------------------------------------- senaryo */
@@ -179,7 +179,7 @@ baslik("=== GERÇEKÇİ SENARYO ===");
   console.log("    D " + h.toplamD + " · Y " + h.toplamY + " · B " + h.toplamB);
   kontrol("Toplam D+Y+B = 90", h.toplamD + h.toplamY + h.toplamB, 90);
   kontrol("Net", h.toplamNet, (16 - 1) + (8 - 2 / 3) + (9 - 1 / 3) + (8 - 1 / 3) + (12 - 2) + (15 - 1));
-  kontrol("Puan = taban + Σ(net × k)", h.puan, 194.752082 + h.dersler.reduce((t, s) => t + s.net * U.KATSAYI[s.id], 0), 0.001);
+  kontrol("Puan = taban + Σ(net × k)", h.puan, 196.618414 + h.dersler.reduce((t, s) => t + s.net * U.KATSAYI[s.id], 0), 0.001);
   kontrol("1. oturum neti", h.oturumlar[1].net, (16 - 1) + (8 - 2 / 3) + (9 - 1 / 3) + (8 - 1 / 3));
   kontrol("2. oturum neti", h.oturumlar[2].net, (12 - 2) + (15 - 1));
 }
@@ -193,7 +193,7 @@ baslik("=== KATSAYI MODELİ ===");
   kontrol("Full net ≈ 500", P.hesapla({ dersler: d }).puan, 500, 0.05);
 }
 {
-  // Türkçe neti aynı toplam netle daha çok puan getirmeli (katsayı 4.348 > 1.5)
+  // Türkçe neti aynı toplam netle daha çok puan getirmeli (katsayı 4.108 > 1.531)
   const a = dogruDagit(0);
   a.turkce = { d: 10, y: 0 };
   const b = dogruDagit(0);
@@ -213,10 +213,10 @@ baslik("=== İSTATİSTİK ===");
     { id: "b", ad: "D2", tarih: "2026-02-01", dersler: dogruDagit(72) },
   ]);
   esit("Adet", o.adet, 2);
-  kontrol("En yüksek (72 net)", o.enYuksek, 425.7591, 0.01);
-  kontrol("En düşük (60 net)", o.enDusuk, 374.9751, 0.01);
-  kontrol("Ortalama", o.ortalama, 400.3671, 0.01);
-  kontrol("Son puan (en yeni tarih)", o.sonPuan, 425.7591, 0.01);
+  kontrol("En yüksek (72 net)", o.enYuksek, 429.9805, 0.01);
+  kontrol("En düşük (60 net)", o.enDusuk, 375.8752, 0.01);
+  kontrol("Ortalama", o.ortalama, 402.9278, 0.01);
+  kontrol("Son puan (en yeni tarih)", o.sonPuan, 429.9805, 0.01);
 }
 {
   const o = P.ozet([]);

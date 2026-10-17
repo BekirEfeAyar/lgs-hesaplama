@@ -3,12 +3,12 @@
    --------------------------------------------------------------------------
    Net  = Doğru − (Yanlış ÷ 3)
    Boş  = Soru − Doğru − Yanlış
-   Puan = 194.752082 + Σ (Ders Neti × Ders Katsayısı)
+   Puan = 196.618414 + Σ (Ders Neti × Ders Katsayısı)
 
-   Katsayılar: Türkçe 4.348, Matematik 4.2538, Fen 4.123,
-               İnkılap 1.666, Din 1.899, Yabancı Dil 1.5075.
+   Katsayılar: Türkçe 4.1076, Matematik 4.6325, Fen 3.89,
+               İnkılap 1.7295, Din 1.8174, Yabancı Dil 1.531.
    (yaygın kullanılan paylaşılmış doğrusal tahmin modeli; full net ≈ 500.
-    Katsayı seti kaynaklarda "2023 LGS tablosu" adıyla da geçer — MEB'in
+    Katsayı seti kaynaklarda "2024 LGS tablosu" adıyla da geçer — MEB'in
     resmî katsayıları değildir.)
 
    Uyarı: Bu, resmî MEB puanı DEĞİLDİR. MEB puanı sınav ortalama ve standart
