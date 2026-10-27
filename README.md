@@ -273,13 +273,6 @@ git push
 - **Gizlilik:** giriş ekranında yazar — moderatör karneleri görebilir.
   Şifreler Firebase'de saklanır, kimse (site sahibi dahil) göremez.
 
-### Moderatör (bekirefeayar101@gmail.com)
-
-- Bu adresle giriş yapınca **🛡️ Moderatör paneli** açılır.
-- Kayıtlı kullanıcı listesi → **Karneleri gör** → deneme + ders dökümü + fotoğraflar.
-- **Salt okunur:** kurallar (`firestore.rules`) yazmayı ve
-  silmeyi yasaklar. Kural dosyasında e-posta iki yerde yazılıdır
-  (`bulut-ayar.js` + kurallar); adres değişirse ikisini de güncelle.
 
 ### Ücretsiz katman yeter mi?
 
