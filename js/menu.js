@@ -13,7 +13,6 @@
     denemeler: '<svg viewBox="0 0 24 24"><path d="M5 3h11l4 4v14H5zm10 1.5V8h3.5z"/></svg>',
     konular: '<svg viewBox="0 0 24 24"><path d="M4 5h16v3H4zm0 5h16v3H4zm0 5h10v3H4z"/></svg>',
     lise: '<svg viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 8-4v6h2V8zM6 12.5V17c0 1.7 2.7 3 6 3s6-1.3 6-3v-4.5l-6 3z"/></svg>',
-    veriler: '<svg viewBox="0 0 24 24"><path d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8m8.9 4a7 7 0 0 0-.1-1.2l2-1.6-2-3.4-2.4 1a7 7 0 0 0-2-1.2L16 3H8l-.4 2.6a7 7 0 0 0-2 1.2l-2.4-1-2 3.4 2 1.6a7 7 0 0 0 0 2.4l-2 1.6 2 3.4 2.4-1a7 7 0 0 0 2 1.2L8 21h8l.4-2.6a7 7 0 0 0 2-1.2l2.4 1 2-3.4-2-1.6c.1-.4.1-.8.1-1.2"/></svg>',
     hesap: '<svg viewBox="0 0 24 24"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5m0 2c-4 0-8 2-8 5v3h16v-3c0-3-4-5-8-5"/></svg>',
   };
 
@@ -35,7 +34,6 @@
       { sayfa: "denemeler", baslik: "Denemeler", aciklama: "Deneme sonuçlarını kaydet, puanını otomatik hesapla.", rozet: denemeSayisi ? sayi(denemeSayisi) + " deneme" : null },
       { sayfa: "konular", baslik: "Konular", aciklama: "Konu listeni tut, yanlış yaptıklarını işaretle.", rozet: null },
       { sayfa: "lise", baslik: "Lise Rehberi", aciklama: "2025 taban puanları ve yüzdelik dilimlerle lise ara.", rozet: liseSayisi ? sayi(liseSayisi) + " program" : null },
-      { sayfa: "veriler", baslik: "Veriler", aciklama: "Yedek al, geri yükle, lise listeni yönet.", rozet: null },
       { sayfa: "hesap", baslik: "Hesap", aciklama: "Bulut eşitlemesi ve hesap ayarları.", rozet: null },
     ];
 

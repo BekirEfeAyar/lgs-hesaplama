@@ -367,18 +367,7 @@
     }
 
     kutu.appendChild(el("h3", { text: "Bu filtrede lise bulunamadı" }));
-    kutu.appendChild(
-      el("p", {
-        text: "Filtreleri gevşetmeyi ya da Veriler sekmesinden yeni lise eklemeyi dene.",
-      })
-    );
-    kutu.appendChild(
-      el("button", {
-        class: "btn birincil",
-        text: "Lise listesine git ve veri ekle",
-        onClick: () => LGS.uygulama.sayfayaGit("veriler"),
-      })
-    );
+    kutu.appendChild(el("p", { text: "Filtreleri gevşetmeyi dene." }));
     return kutu;
   }
 

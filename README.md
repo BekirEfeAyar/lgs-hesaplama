@@ -45,15 +45,6 @@ Kurulum, sunucu, hesap yönetimi, üyelik — hiçbir şey gerekmiyor. Siteyi a�
 - "Sadece puanıma yetenler" anahtarı
 - Her satırda ne kadar puan gerektiği yazıyor
 
-### Veri yönetimi
-- Kendi lise kayıtlarını ekle / düzenle / sil (il ve ilçe seçimi açılır listeden)
-- **Toplu içe aktarma:** Excel'den kopyalayıp yapıştır
-- CSV dışa aktarma (alan, 2024 puan, kontenjan, kod, kaynak sütunlarıyla)
-- JSON yedek alma ve geri yükleme
-- Eski sürümden geçişte kendi resmî kayıtların korunur
-
----
-
 ## Puan nasıl hesaplanıyor?
 
 ```
@@ -112,35 +103,15 @@ Yüzdelik dilimler tabanpuanlari.net ve terapotikakademi.com verisidir; her kay�
 taban puanıyla birebir eşleştirilerek doğrulandı (2701/3096 kayıt, %87).
 İkinci kaynak düşük puanlarda (taban<300) resmî MEB dağılımıyla tutarsız
 olduğu için yalnızca taban≥300 kayıtlarda kullanıldı; kalanlarda dilim
-boş görünür. Kendi verini eklersen dilimi girebilirsin.
+boş görünür.
 
 İl ve ilçe listesi ise **tam ve gerçektir** (81 il / 973 ilçe, turkiyeapi.dev).
 
 Bu uyarılar sitede her ekranda görünür. Doğru karar için mutlaka resmî kaynaklardan teyit et.
 
-### Kendi lise listeni eklemek
-
-**Veriler** sekmesinden iki yolun var:
-
-**Yol 1 — Tek tek:** `+ Lise ekle` → il açılır listeden 81ilden seçilir, ilçe listesi
-otomatik dolar, sonra tür ve taban puan girilir. `Resmî veri` kutusunu işaretle,
-listedeki "örnek veri" etiketi kalkar.
-
-**Yol 2 — Toplu:** `Toplu içe aktar` → Excel'den kopyaladığın satırları yapıştır:
-
-```
-Lise adı; İl; İlçe; Taban puan; Yüzdelik dilim; Tür
-Atatürk Fen Lisesi; Ankara; Çankaya; 425,5; 1,2; fen
-Nilüfer MTAL; Bursa; Nilüfer; 318,25; 8,5; mtal
-```
-
-İl adı 81 ilin gerek adlarından biri olmalı. Tanınmayan il adları içe aktarma
-öncesi uyarı olarak gösterilir. Ayırıcı `;` veya `|` olabilir, ondalık için virgül ya da nokta.
-Tür adları: `fen`, `mtal`, `proje`, `sosyal`, `diger`
-
 ---
 
-## Veriler nerede saklanıyor?
+## Kayıtlar nerede saklanıyor?
 
 **Yalnızca senin tarayıcında.**
 
@@ -149,12 +120,9 @@ Tür adları: `fen`, `mtal`, `proje`, `sosyal`, `diger`
 
 Hiçbir şey sunucuya gönderilmez. Bu da şu anlama geliyor:
 
-- Cihaz değiştirirsen veriler **gelmez** → cihazlar arası taşımak için JSON yedeği al
-- Tarayıcı verilerini silersen veriler gider
+- Cihaz değiştirirsen kayıtlar **gelmez**
+- Tarayıcı verilerini silersen kayıtlar gider
 - Gizli sekmede açarsan ayrı bir boş sayfa görürsün
-
-**Veriler** sekmesinden düzenli olarak `⬇ Yedek al (JSON)` yap. Yedeği istediğin cihazda
-`⬆ Yedekten geri yükle` ile geri alabilirsin.
 
 ---
 
@@ -173,7 +141,6 @@ lgs-hesaplama/
 │   ├── denemeler.js        Deneme ekranı + Yanlışlarım (soru/konu sekmeleri)
 │   ├── konular.js          Konular ekranı (yanlış arşivi ağacı)
 │   ├── liseler.js          Lise Rehberi ekranı
-│   ├── veriler.js          Veri yönetimi ekranı
 │   ├── bulut.js            Firebase Auth/Firestore senkronu
 │   ├── hesap.js            Hesap sekmesi + moderatör paneli
 │   └── uygulama.js         Tema, sekmeler, başlatma

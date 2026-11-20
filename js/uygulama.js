@@ -13,7 +13,6 @@
     denemeler: { ad: "Denemeler", ciz: (k) => LGS.denemeler.ciz(k) },
     konular: { ad: "Konular", ciz: (k) => LGS.konular.ciz(k) },
     lise: { ad: "Lise Rehberi", ciz: (k) => LGS.lise.ciz(k) },
-    veriler: { ad: "Veriler", ciz: (k) => LGS.veriler.ciz(k) },
     hesap: { ad: "Hesap", ciz: (k) => LGS.hesap.ciz(k) },
   };
 
