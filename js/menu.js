@@ -43,7 +43,22 @@
         { class: "kart menu-karsilama" },
         el("p", { class: "menu-ust", text: "LGS Deneme Takipçisi" }),
         el("h2", { text: "Nereden başlamak istersin?" }),
-        el("p", { class: "menu-alt", text: "Kartlardan birini seç; üstteki menüden her zaman gezinebilirsin." })
+        el("p", { class: "menu-alt", text: "Kartlardan birini seç; üstteki menüden her zaman gezinebilirsin." }),
+        el(
+          "div",
+          { class: "menu-rozetler" },
+          el(
+            "span",
+            { class: "menu-rozet-chip" },
+            el("span", { class: "menu-nokta", "aria-hidden": "true" }),
+            "2026 LGS"
+          ),
+          el("span", { class: "menu-rozet-chip", text: "90 soru · 6 ders" }),
+          el("span", {
+            class: "menu-rozet-chip",
+            text: sayi(liseSayisi || 3096) + " lise programı",
+          })
+        )
       )
     );
 

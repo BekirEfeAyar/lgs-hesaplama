@@ -8,6 +8,10 @@
   const { $, $$, bildir } = LGS.arayuz;
   const D = LGS.depo;
 
+  function hareketAzaltilsin() {
+    return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+  }
+
   const SAYFALAR = {
     menu: { ad: "Ana Menü", ciz: (k) => LGS.menu.ciz(k) },
     denemeler: { ad: "Denemeler", ciz: (k) => LGS.denemeler.ciz(k) },
@@ -45,8 +49,59 @@
   function temaDegistir() {
     const koyu = document.documentElement.getAttribute("data-tema") === "koyu";
     const yeni = !koyu;
-    temayiUygula(yeni);
-    localStorage.setItem(LGS.ANAHTAR.tema, yeni ? "koyu" : "acik");
+    const uygula = () => {
+      temayiUygula(yeni);
+      localStorage.setItem(LGS.ANAHTAR.tema, yeni ? "koyu" : "acik");
+    };
+
+    if (hareketAzaltilsin() || typeof document.startViewTransition !== "function") {
+      uygula();
+      return;
+    }
+
+    const icerik = $("#icerik");
+    if (icerik && (icerik.classList.contains("sayfa-cikis") || icerik.classList.contains("sayfa-giris"))) {
+      uygula();
+      return;
+    }
+
+    try {
+      document.startViewTransition(uygula);
+    } catch (e) {
+      uygula();
+    }
+  }
+
+  /* ---------------------------------------------------------------- geçişler */
+
+  let gecisZamanlayici = null;
+
+  function gecisliCiz() {
+    const icerik = $("#icerik");
+    if (!icerik || hareketAzaltilsin()) {
+      ciz();
+      return;
+    }
+
+    if (gecisZamanlayici) {
+      clearTimeout(gecisZamanlayici);
+      gecisZamanlayici = null;
+    }
+
+    icerik.classList.remove("sayfa-giris");
+    icerik.classList.add("sayfa-cikis");
+
+    gecisZamanlayici = setTimeout(() => {
+      ciz();
+      icerik.classList.remove("sayfa-cikis");
+      void icerik.offsetWidth;
+      icerik.classList.add("sayfa-giris");
+
+      gecisZamanlayici = setTimeout(() => {
+        icerik.classList.remove("sayfa-giris");
+        gecisZamanlayici = null;
+      }, 480);
+    }, 110);
   }
 
   /* ---------------------------------------------------------------- yönlendirme */
@@ -83,7 +138,8 @@
     if (location.hash.slice(1) !== ad) {
       history.replaceState(null, "", "#" + ad);
     }
-    ciz();
+    if (dogrudan) ciz();
+    else gecisliCiz();
   }
 
   /* ---------------------------------------------------------------- ilk açılış */
