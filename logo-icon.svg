@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="LGS Deneme Takipçisi logosu">
+  <rect width="512" height="512" rx="116" fill="#14463F"/>
+  <rect x="120" y="312" width="80" height="100" rx="22" fill="#F6F1E7" fill-opacity="0.55"/>
+  <rect x="216" y="242" width="80" height="170" rx="22" fill="#F6F1E7" fill-opacity="0.82"/>
+  <rect x="312" y="172" width="80" height="240" rx="22" fill="#E2683C"/>
+  <path d="M352 84 C356 106 364 114 386 118 C364 122 356 130 352 152 C348 130 340 122 318 118 C340 114 348 106 352 84 Z" fill="#F6F1E7"/>
+</svg>
