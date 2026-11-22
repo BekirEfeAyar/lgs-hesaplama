@@ -80,33 +80,18 @@ body {
   animation: none;
 }
 
-/* Aurora, sabit bir katmanda yalnızca transform ile hareket eder; bu sayede
-   arka plan yeniden boyanmaz ve sayfa geçişleri daha akıcı kalır. */
+/* Aurora sabit bir katmanda durur. Sürekli animasyon ve backdrop-filter
+   kaldırıldı: sayfa artık boştayken hiçbir kare yeniden çizilmiyor. */
 body::before {
   content: "";
   position: fixed;
-  inset: -18%;
+  inset: 0;
   z-index: -1;
   background:
     radial-gradient(42% 48% at 16% 14%, var(--aurora-1), transparent 68%),
     radial-gradient(40% 42% at 86% 8%, var(--aurora-2), transparent 66%),
     radial-gradient(48% 52% at 52% 96%, var(--aurora-3), transparent 70%);
-  transform: translate3d(0, 0, 0) scale(1.04);
-  animation: auroraAkis 34s ease-in-out infinite alternate;
-  will-change: transform;
   pointer-events: none;
-}
-
-@keyframes auroraAkis {
-  0% {
-    transform: translate3d(-1.5%, -1%, 0) scale(1.02) rotate(-1.2deg);
-  }
-  50% {
-    transform: translate3d(1.2%, 1.6%, 0) scale(1.08) rotate(0.8deg);
-  }
-  100% {
-    transform: translate3d(-0.6%, 0.8%, 0) scale(1.04) rotate(0.2deg);
-  }
 }
 
 ::selection {
@@ -140,10 +125,8 @@ body::before {
 .ust {
   max-width: 1180px;
   padding: 18px 20px 14px;
-  background: color-mix(in srgb, var(--zemin) 70%, transparent);
+  background: color-mix(in srgb, var(--zemin) 96%, transparent);
   border-bottom: 1px solid color-mix(in srgb, var(--kenar) 65%, transparent);
-  backdrop-filter: blur(22px) saturate(150%);
-  -webkit-backdrop-filter: blur(22px) saturate(150%);
 }
 
 .ust::after {
@@ -161,20 +144,13 @@ body::before {
   gap: 14px;
 }
 
-@property --logo-acisi {
-  syntax: "<angle>";
-  inherits: false;
-  initial-value: 210deg;
-}
-
 .logo {
-  --logo-acisi: 210deg;
   width: 52px;
   height: 52px;
   border: none;
   border-radius: 17px;
   background:
-    conic-gradient(from var(--logo-acisi), #ff7058, #ffc46b, #4be1c3, #7c5cff, #ff7058);
+    conic-gradient(from 210deg, #ff7058, #ffc46b, #4be1c3, #7c5cff, #ff7058);
   color: #08110f;
   font-family: var(--serif);
   font-size: 16px;
@@ -184,13 +160,6 @@ body::before {
     0 14px 30px -12px rgba(240, 86, 61, 0.65),
     inset 0 0 0 1px rgba(255, 255, 255, 0.42);
   transform: none;
-  animation: logoAkis 26s linear infinite;
-}
-
-@keyframes logoAkis {
-  to {
-    --logo-acisi: 570deg;
-  }
 }
 
 .logo::after {
@@ -219,10 +188,8 @@ body::before {
   height: 44px;
   border-radius: 50%;
   border: 1px solid var(--kenar);
-  background: var(--yuzey);
+  background: color-mix(in srgb, var(--yuzey) 94%, var(--zemin));
   box-shadow: var(--golge);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
   transition:
     transform 0.35s var(--gecis-yumusak),
     background-color 0.35s ease,
@@ -262,10 +229,8 @@ body::before {
   padding: 6px;
   border: 1px solid var(--kenar);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--yuzey) 88%, transparent);
+  background: color-mix(in srgb, var(--yuzey) 96%, var(--zemin));
   box-shadow: var(--golge);
-  backdrop-filter: blur(20px) saturate(150%);
-  -webkit-backdrop-filter: blur(20px) saturate(150%);
 }
 
 .sekme {
@@ -306,22 +271,11 @@ body::before {
 
 .sekme.etkin {
   background-image: linear-gradient(115deg, var(--ana) 0%, #ff9a62 52%, var(--ana) 100%);
-  background-size: 180% 100%;
   border: none;
   color: #fffaf4;
   box-shadow:
     0 10px 24px -10px color-mix(in srgb, var(--ana) 75%, transparent),
     inset 0 1px 0 rgba(255, 255, 255, 0.28);
-  animation: sekmeAkis 8s ease-in-out infinite alternate;
-}
-
-@keyframes sekmeAkis {
-  from {
-    background-position: 0% 50%;
-  }
-  to {
-    background-position: 100% 50%;
-  }
 }
 
 [data-tema="koyu"] .sekme.etkin {
@@ -411,8 +365,6 @@ body::before {
   border: 1px solid var(--kenar);
   border-radius: var(--r);
   box-shadow: var(--golge);
-  backdrop-filter: blur(16px) saturate(130%);
-  -webkit-backdrop-filter: blur(16px) saturate(130%);
 }
 
 .ust,
@@ -468,39 +420,10 @@ body::before {
   font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
   pointer-events: none;
   user-select: none;
-  animation: devLgs 24s ease-in-out infinite alternate;
-}
-
-@keyframes devLgs {
-  to {
-    transform: translate3d(-1.4%, -1.2%, 0) rotate(-1.2deg);
-  }
 }
 
 .menu-karsilama::after {
-  content: "";
-  position: absolute;
-  inset: -60% -20%;
-  z-index: 0;
-  background: linear-gradient(112deg, transparent 42%, rgba(255, 255, 255, 0.08) 50%, transparent 58%);
-  transform: translateX(-24%);
-  animation: heroParilti 11s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes heroParilti {
-  0%,
-  55% {
-    transform: translateX(-34%);
-    opacity: 0;
-  }
-  70% {
-    opacity: 0.75;
-  }
-  100% {
-    transform: translateX(34%);
-    opacity: 0;
-  }
+  display: none;
 }
 
 .menu-karsilama > * {
@@ -517,14 +440,12 @@ body::before {
   padding: 7px 12px;
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
+  background: rgba(255, 255, 255, 0.09);
   color: #c9ffed;
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .menu-ust::before {
@@ -580,14 +501,12 @@ body::before {
   padding: 7px 12px;
   border: 1px solid rgba(255, 255, 255, 0.13);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.055);
+  background: rgba(255, 255, 255, 0.08);
   color: rgba(246, 242, 232, 0.76);
   font-size: 10.5px;
   font-weight: 700;
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .menu-nokta {
@@ -663,8 +582,7 @@ body::before {
   width: 62%;
   aspect-ratio: 1;
   border-radius: 50%;
-  background: radial-gradient(circle, color-mix(in srgb, var(--vurgu) 26%, transparent), transparent 70%);
-  filter: blur(24px);
+  background: radial-gradient(circle, color-mix(in srgb, var(--vurgu) 22%, transparent), transparent 72%);
   transition: transform 0.8s var(--gecis-yumusak), opacity 0.6s ease;
 }
 
@@ -1022,9 +940,7 @@ textarea:focus {
 }
 
 .modal-katman {
-  background: rgba(5, 16, 13, 0.55);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(5, 16, 13, 0.64);
 }
 
 .modal-katman:not([hidden]) {
@@ -1064,8 +980,6 @@ textarea:focus {
   background: color-mix(in srgb, var(--metin) 92%, var(--zemin));
   color: var(--zemin);
   box-shadow: var(--golge-buyuk);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   transition:
     transform 0.5s var(--gecis-yumusak),
     opacity 0.3s ease;
